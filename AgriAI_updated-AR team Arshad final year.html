@@ -1,0 +1,2310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgriAI | Smart Agriculture & Crop Advisory</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+body{background:#f4f8f3;color:#173b24}
+header{height:72px;background:#fff;border-bottom:1px solid #e4ebe4;display:flex;align-items:center;justify-content:space-between;padding:0 6%;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:10px;font-size:23px;font-weight:800;color:#19713b}
+.logo-icon{width:42px;height:42px;display:flex;align-items:center;justify-content:center;background:#dff4e4;border-radius:12px;font-size:23px}
+nav{display:flex;gap:30px}nav a{text-decoration:none;color:#496050;font-size:14px;font-weight:600}nav a:hover{color:#16833e}
+button{cursor:pointer}.header-button,.primary-button,.analyze-button{background:#18783c;color:#fff;border:none;font-weight:700}
+.header-button{padding:11px 19px;border-radius:9px}
+.hero{min-height:470px;padding:70px 7%;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:60px;background:linear-gradient(120deg,#f2fbf2,#e3f5e5)}
+.hero h1{font-size:54px;line-height:1.08;margin-bottom:22px;color:#143d22}.hero h1 span{color:#18823f}
+.hero p{font-size:18px;line-height:1.7;color:#607164;max-width:650px}
+.hero-buttons{display:flex;gap:14px;margin-top:30px}.primary-button,.secondary-button{padding:14px 23px;border-radius:9px;font-weight:700}
+.secondary-button{background:#fff;color:#18783c;border:1px solid #b9d8c0}
+.hero-card{background:#fff;border-radius:22px;padding:25px;box-shadow:0 20px 50px rgba(30,85,45,.12);border:1px solid #e0ebe1}
+.farm-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.farm-header h3{font-size:18px}
+.status{background:#e2f7e8;color:#16823e;padding:6px 11px;border-radius:20px;font-size:12px;font-weight:bold}
+.crop-health{background:#f6faf6;padding:20px;border-radius:15px;margin-bottom:15px}.health-top{display:flex;justify-content:space-between;margin-bottom:12px}
+.health-score{color:#16823e;font-size:28px;font-weight:800}.progress{height:9px;background:#dfe9df;border-radius:20px;overflow:hidden}.progress-bar{width:84%;height:100%;background:#28a653}
+.sensor-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.sensor{padding:16px;background:#f7faf7;border-radius:13px}.sensor small{color:#718075}.sensor strong{display:block;margin-top:7px;font-size:21px}
+.section{padding:75px 7%}.section-title{text-align:center;margin-bottom:45px}.section-title h2{font-size:34px;margin-bottom:12px}.section-title p{color:#6c7b70}
+.features{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}.feature{background:#fff;padding:27px;border-radius:17px;border:1px solid #e4ebe4;transition:.25s}.feature:hover{transform:translateY(-5px);box-shadow:0 15px 35px rgba(31,83,45,.10)}
+.feature-icon{width:48px;height:48px;background:#e3f5e6;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:23px;margin-bottom:18px}.feature h3{margin-bottom:10px}.feature p{color:#6c7b70;line-height:1.6;font-size:14px}
+.dashboard-section{background:#edf5ee}.dashboard{max-width:1200px;margin:auto;display:grid;grid-template-columns:.8fr 1.2fr;gap:25px}.panel{background:#fff;border-radius:18px;padding:25px;border:1px solid #e0e9e1}.panel h3{margin-bottom:20px}
+label{display:block;font-size:13px;font-weight:bold;margin-bottom:7px;color:#4f6255}
+select,input,textarea{width:100%;border:1px solid #d4dfd5;border-radius:9px;padding:12px;outline:none;margin-bottom:17px;font-size:14px}
+textarea{resize:vertical;min-height:110px}select:focus,input:focus,textarea:focus{border-color:#28a653}.analyze-button{width:100%;padding:13px;border-radius:9px}
+.result{background:#f7faf7;border-radius:13px;padding:20px;min-height:350px}.result-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.risk{background:#fff0d9;color:#a76500;padding:7px 12px;border-radius:20px;font-size:12px;font-weight:bold}
+.diagnosis{background:#fff;padding:18px;border-radius:12px;margin-bottom:15px;border-left:4px solid #25a34e}.diagnosis h4{margin-bottom:8px;color:#16783a}
+.recommendations{display:grid;grid-template-columns:1fr 1fr;gap:12px}.recommendation{background:#fff;padding:15px;border-radius:11px}.recommendation strong{display:block;margin-bottom:6px}.recommendation span{color:#657369;font-size:13px}.solution-card{grid-column:1 / -1;border:1px solid #cfe3d2;background:#f5fbf6}.solution-details{display:block;white-space:pre-line;line-height:1.65}
+.result-voice{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid #e2ebe3}
+.hear-result-button{border:none;background:#18783c;color:#fff;padding:9px 13px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer}
+.hear-result-button:disabled{opacity:.5;cursor:not-allowed}
+.hear-result-button.speaking{background:#b42323}
+#resultVoiceStatus{font-size:12px;color:#637368;line-height:1.4}
+.result-mute-button{border:1px solid #b9d8c0;background:#fff;color:#176e38;padding:9px 13px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.result-mute-button:hover{background:#f1f8f2}
+.result-mute-button.muted{background:#fff0d9;border-color:#f0c77b;color:#9a6500}
+.result-mute-button:disabled{opacity:.5;cursor:not-allowed}
+
+.cta{margin:70px 7%;background:#176e38;color:#fff;border-radius:22px;padding:50px;display:flex;justify-content:space-between;align-items:center;gap:30px}.cta h2{font-size:32px;margin-bottom:10px}.cta p{color:#d5ead9}.cta button{background:#fff;color:#176e38;border:none;padding:14px 22px;border-radius:9px;font-weight:bold}
+footer{background:#102b1a;color:#d7e6d9;padding:35px 7%;display:flex;justify-content:space-between;align-items:center}footer span{color:#8ca694;font-size:13px}
+
+
+/* ================= VOICE SYMPTOM MODULE ================= */
+.voice-module {
+    background: linear-gradient(135deg,#f3faf4,#e9f6ec);
+    border: 1px solid #cfe3d2;
+    border-radius: 14px;
+    padding: 16px;
+    margin: 4px 0 18px;
+}
+.voice-head {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    margin-bottom:8px;
+}
+.voice-head strong { font-size:14px; color:#174f2b; }
+.voice-help { color:#6a786e; font-size:12px; line-height:1.5; margin-bottom:12px; }
+.voice-controls {
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:8px;
+    align-items:center;
+}
+.voice-language {
+    width:100%;
+    margin:0;
+    background:#fff;
+}
+.voice-button {
+    border:none;
+    background:#18783c;
+    color:#fff;
+    border-radius:10px;
+    min-height:44px;
+    padding:0 15px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    gap:7px;
+    white-space:nowrap;
+}
+.voice-button.listening {
+    background:#b42323;
+    animation:voicePulse 1.2s infinite;
+}
+@keyframes voicePulse {
+    0%,100% { box-shadow:0 0 0 0 rgba(180,35,35,.25); }
+    50% { box-shadow:0 0 0 8px rgba(180,35,35,0); }
+}
+.voice-status {
+    margin-top:9px;
+    font-size:12px;
+    color:#557060;
+    min-height:18px;
+}
+.voice-transcript {
+    width:100%;
+    min-height:75px;
+    margin:9px 0 0;
+    background:#fff;
+    border-color:#cfe0d1;
+}
+.voice-analyze {
+    width:100%;
+    margin-top:9px;
+    background:#0f6d35;
+    color:#fff;
+    border:none;
+    padding:10px;
+    border-radius:9px;
+    font-weight:700;
+}
+@media(max-width:650px){
+    .voice-controls{grid-template-columns:1fr}
+    .voice-button{justify-content:center}
+}
+
+/* ================= SYMPTOM OPTIONS ================= */
+
+.symptom-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 3px;
+    margin-bottom: 12px;
+}
+
+.symptom-placeholder {
+    padding: 18px;
+    text-align: center;
+    background: #f7faf7;
+    border: 1px dashed #cbdcca;
+    border-radius: 10px;
+    color: #718076;
+    font-size: 13px;
+}
+
+.symptom-option {
+    width: 100%;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 13px;
+    background: #f7faf7;
+    border: 1px solid #dbe8dc;
+    border-radius: 10px;
+    color: #173b24;
+    text-align: left;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.symptom-option:hover {
+    border-color: #28a653;
+    background: #f0f8f1;
+}
+
+.symptom-option.selected {
+    background: #e2f7e8;
+    border: 2px solid #28a653;
+    color: #126b35;
+}
+
+.symptom-number {
+    width: 27px;
+    height: 27px;
+    flex: 0 0 27px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e3f5e6;
+    color: #18783c;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.symptom-option.selected .symptom-number {
+    background: #28a653;
+    color: white;
+}
+
+.symptom-text {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.check-mark {
+    width: 23px;
+    height: 23px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #cbd9cd;
+    border-radius: 6px;
+    color: transparent;
+    background: white;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.symptom-option.selected .check-mark {
+    background: #18783c;
+    border-color: #18783c;
+    color: white;
+}
+
+.selected-symptoms {
+    background: #f1f7f2;
+    border: 1px solid #dbe8dc;
+    border-radius: 9px;
+    padding: 9px 11px;
+    min-height: 38px;
+    margin-bottom: 17px;
+    color: #5c6d61;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.symptom-options::-webkit-scrollbar { width: 6px; }
+.symptom-options::-webkit-scrollbar-track { background: #eef4ef; border-radius: 10px; }
+.symptom-options::-webkit-scrollbar-thumb { background: #b8cfbb; border-radius: 10px; }
+
+
+.intent-confidence{margin-top:10px;background:#dfe9df;border-radius:20px;height:8px;overflow:hidden}.intent-confidence-bar{height:100%;width:0%;background:#28a653;transition:width .4s}.server-status{font-size:11px;color:#718075;margin-top:8px;line-height:1.4}
+@media(max-width:900px){nav{display:none}.hero{grid-template-columns:1fr}.hero h1{font-size:42px}.features{grid-template-columns:1fr 1fr}.dashboard{grid-template-columns:1fr}}
+@media(max-width:600px){.hero{padding:50px 5%}.hero h1{font-size:36px}.features{grid-template-columns:1fr}.recommendations{grid-template-columns:1fr}.cta{margin:40px 5%;padding:30px;flex-direction:column;align-items:flex-start}footer{flex-direction:column;gap:10px;text-align:center}}
+
+/* ================= WELCOME INTRO SCREEN ================= */
+body.intro-locked{overflow:hidden}
+.welcome-screen{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(circle at 15% 15%,rgba(188,230,168,.72),transparent 32%),linear-gradient(135deg,#0b3820 0%,#145b32 48%,#237b43 100%);overflow-y:auto;transition:opacity .55s ease,visibility .55s ease}
+.welcome-screen::before,.welcome-screen::after{content:"";position:absolute;border:1px solid rgba(255,255,255,.12);border-radius:50%;pointer-events:none}
+.welcome-screen::before{width:520px;height:520px;right:-160px;top:-190px}
+.welcome-screen::after{width:360px;height:360px;left:-140px;bottom:-170px}
+.welcome-screen.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
+.welcome-screen:after{animation:fieldDrift 12s ease-in-out infinite alternate}
+@keyframes fieldDrift{from{transform:translate(0,0) rotate(0)}to{transform:translate(18px,-12px) rotate(8deg)}}
+.welcome-card{position:relative;z-index:1;width:min(920px,100%);display:grid;grid-template-columns:1fr .8fr;gap:36px;align-items:center;padding:clamp(26px,5vw,58px);border:1px solid rgba(255,255,255,.26);border-radius:28px;background:rgba(255,255,255,.96);box-shadow:0 28px 90px rgba(0,0,0,.25);animation:welcomeRise .75s ease both}
+@keyframes welcomeRise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.welcome-brand{display:inline-flex;align-items:center;gap:9px;margin-bottom:24px;color:#19713b;font-size:18px;font-weight:800;letter-spacing:.2px}
+.welcome-brand-icon{width:42px;height:42px;display:grid;place-items:center;background:#e0f4e4;border-radius:13px;font-size:24px}
+.welcome-eyebrow{color:#258449;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:13px}
+.welcome-copy h1{font-size:clamp(38px,5vw,58px);line-height:1.04;letter-spacing:-1.5px;color:#143d22;margin-bottom:16px}
+.welcome-copy h1 span{color:#21934a}
+.welcome-copy>p{font-size:16px;line-height:1.75;color:#617166;max-width:510px}
+.welcome-points{display:grid;gap:12px;margin:23px 0 28px}
+.welcome-point{display:flex;align-items:center;gap:11px;color:#365441;font-size:14px;font-weight:600}
+.welcome-check{display:grid;place-items:center;flex:0 0 27px;width:27px;height:27px;border-radius:9px;background:#e5f6e9;color:#16823e}
+.welcome-start{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 24px;border:0;border-radius:11px;background:#18783c;color:#fff;font-weight:800;font-size:15px;box-shadow:0 9px 20px rgba(24,120,60,.22);transition:transform .2s,background .2s}
+.welcome-start:hover{background:#11652f;transform:translateY(-2px)}
+.welcome-note{margin-top:14px;color:#829086;font-size:11px}
+.welcome-art{position:relative;min-height:330px;display:flex;align-items:center;justify-content:center}
+.welcome-orbit{position:absolute;width:min(310px,100%);aspect-ratio:1;border-radius:50%;background:linear-gradient(145deg,#e5f7e7,#c6eacc);border:1px solid #d0ead4}
+.welcome-plant{position:relative;z-index:1;width:210px;height:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;filter:drop-shadow(0 12px 12px rgba(29,104,48,.12))}
+.welcome-plant .sun{position:absolute;top:12px;right:5px;font-size:48px;animation:sunFloat 4s ease-in-out infinite}
+.welcome-plant .sprout{font-size:120px;line-height:1;transform:translateY(-4px);transform-origin:bottom center;animation:sproutGrow 1.8s cubic-bezier(.2,.8,.2,1) both, sproutSway 4s ease-in-out 1.8s infinite}
+.welcome-plant .soil{width:175px;height:27px;border-radius:50%;background:#b9d9a7;border-bottom:6px solid #8bb978}
+.welcome-badge{position:absolute;z-index:2;display:flex;align-items:center;gap:8px;padding:11px 14px;border:1px solid #e1eee2;border-radius:13px;background:#fff;box-shadow:0 10px 28px rgba(27,76,37,.12);font-size:12px;font-weight:800;color:#275537}
+.welcome-badge small{display:block;font-size:10px;font-weight:500;color:#77867a;margin-top:3px}
+.welcome-badge-one{left:-4px;top:45px}.welcome-badge-two{right:-3px;bottom:42px}
+@keyframes sunFloat{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-7px) rotate(8deg)}}
+@keyframes sproutGrow{0%{opacity:0;transform:translateY(28px) scale(.45)}70%{opacity:1;transform:translateY(-5px) scale(1.06)}100%{transform:translateY(-4px) scale(1)}}
+@keyframes sproutSway{0%,100%{rotate:-2deg}50%{rotate:2deg}}
+.welcome-orbit{animation:orbitBreathe 5s ease-in-out infinite}
+@keyframes orbitBreathe{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(75,155,80,0)}50%{transform:scale(1.035);box-shadow:0 0 0 12px rgba(75,155,80,.06)}}
+@media(max-width:720px){.welcome-card{grid-template-columns:1fr;gap:10px;max-width:520px;padding:28px}.welcome-art{min-height:205px;order:-1}.welcome-orbit{width:190px}.welcome-plant{height:190px;width:170px}.welcome-plant .sprout{font-size:86px}.welcome-plant .soil{width:125px;height:20px}.welcome-plant .sun{font-size:34px;right:4px;top:4px}.welcome-badge-one{left:0;top:14px}.welcome-badge-two{right:0;bottom:8px}.welcome-copy h1{font-size:40px}.welcome-brand{margin-bottom:17px}}
+@media(prefers-reduced-motion:reduce){.welcome-card,.welcome-plant .sun{animation:none}.welcome-screen,.welcome-start{transition:none}}
+
+
+.global-language-wrap{position:relative;display:flex;align-items:center;gap:8px;margin-left:auto;margin-right:14px;min-width:190px}
+.global-language-label{display:inline!important;margin:0!important;white-space:nowrap;color:#496050;font-size:12px!important}
+.global-language{width:auto;min-width:130px;margin:0;padding:9px 10px;background:#fff;border:1px solid #b9d8c0;border-radius:9px;color:#173b24;font-weight:600}
+#siteLanguage:focus{outline:2px solid #28a653;outline-offset:2px}
+@media(max-width:900px){.global-language-wrap{margin-left:0;margin-right:8px}.global-language-label{display:none!important}.global-language{min-width:115px}}
+@media(max-width:600px){header{padding:0 3%;gap:8px}.logo{font-size:18px}.global-language-wrap{min-width:0}.global-language{min-width:100px;padding:8px 5px}.header-button{padding:9px 10px;font-size:11px}}
+
+
+/* Professional agricultural field-notes section */
+.agri-insights{background:#fff}
+.insights-intro{max-width:720px;margin:0 auto 36px;text-align:center;color:#65766a;line-height:1.7}
+.insight-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;max-width:1200px;margin:auto}
+.insight-card{overflow:hidden;background:#fff;border:1px solid #e0e9e1;border-radius:18px;box-shadow:0 8px 24px rgba(25,65,35,.055);transition:transform .25s,box-shadow .25s}
+.insight-card:hover{transform:translateY(-6px);box-shadow:0 18px 38px rgba(25,65,35,.12)}
+.insight-visual{height:185px;position:relative;display:flex;align-items:flex-end;padding:18px;background-size:cover;background-position:center}
+.insight-visual:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(8,35,17,.65),transparent 75%)}
+.insight-tag{position:relative;z-index:1;background:rgba(255,255,255,.94);color:#176e38;border-radius:20px;padding:7px 11px;font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase}
+.insight-body{padding:21px}
+.insight-body h3{font-size:19px;line-height:1.35;margin-bottom:10px;color:#173b24}
+.insight-body p{font-size:14px;line-height:1.7;color:#657369;margin-bottom:16px}
+.insight-link{border:0;background:none;color:#18783c;font-weight:800;font-size:13px;padding:0}
+.insight-link:hover{text-decoration:underline}
+.insight-footnote{max-width:1200px;margin:22px auto 0;font-size:12px;color:#7a887e;line-height:1.6}
+.section-kicker{display:inline-flex;align-items:center;gap:7px;color:#18783c;background:#e8f6eb;padding:7px 12px;border-radius:30px;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px}
+.hero{position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;left:-70px;bottom:-145px;width:300px;height:300px;border:1px solid rgba(34,126,59,.13);border-radius:50%;box-shadow:0 0 0 28px rgba(34,126,59,.035),0 0 0 58px rgba(34,126,59,.025);pointer-events:none}
+.hero>div{position:relative;z-index:1}
+@media(max-width:900px){.insight-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.insight-grid{grid-template-columns:1fr}.insight-visual{height:200px}.insight-body{padding:18px}}
+@media(prefers-reduced-motion:reduce){.welcome-plant .sprout,.welcome-plant .sun,.welcome-orbit,.welcome-screen:after{animation:none!important}.insight-card{transition:none}}
+
+
+
+/* Click-to-enter transition: a short animated field-loading sequence */
+.launch-transition{position:absolute;z-index:5;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;background:linear-gradient(135deg,rgba(5,42,22,.97),rgba(24,105,49,.97));color:#fff;opacity:0;visibility:hidden;pointer-events:none;transition:opacity 1.2s ease-in-out,visibility 1.2s ease-in-out}
+.welcome-screen.is-launching .launch-transition{opacity:1;visibility:visible}
+.welcome-screen.is-launching .welcome-card,.welcome-screen.is-hidden .welcome-card{opacity:0!important;visibility:hidden!important;transform:translateY(-12px) scale(.98);transition:opacity 1.1s ease-in-out,transform 1.1s ease-in-out;animation:none!important}
+/* Keep the loading layer steady while the whole intro fades away; prevents a flash of the welcome card. */
+.welcome-screen.is-hidden.is-launching .launch-transition{opacity:1;visibility:visible;transition:none}
+.launch-sun{font-size:45px;margin-bottom:14px;animation:launchSunrise 4.5s ease-in-out infinite alternate}
+.launch-seed{width:112px;height:112px;border:1px solid rgba(228,255,211,.45);border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,rgba(203,255,178,.2),rgba(255,255,255,.035));box-shadow:0 0 0 12px rgba(222,255,206,.045),0 0 38px rgba(184,255,157,.13);margin-bottom:22px;animation:seedPulse 4.8s ease-in-out infinite}
+.launch-seed span{font-size:58px;display:block;transform-origin:bottom center;animation:seedGrow 5.2s ease-in-out infinite}
+.launch-title{font-size:clamp(25px,4vw,36px);font-weight:800;letter-spacing:-.5px}
+.launch-message{font-size:14px;color:#d8eddb;margin-top:10px;min-height:22px}
+.launch-progress{width:min(290px,75vw);height:5px;margin-top:26px;border-radius:10px;background:rgba(255,255,255,.18);overflow:hidden}
+.launch-progress span{display:block;width:0;height:100%;border-radius:10px;background:linear-gradient(90deg,#b7ed86,#fff0a7);box-shadow:0 0 14px rgba(225,255,175,.6)}
+.welcome-screen.is-launching .launch-progress span{animation:launchProgress 6s linear forwards}
+.launch-status{margin-top:18px;color:rgba(255,255,255,.62);font-size:10px;font-weight:800;letter-spacing:2px}
+.launch-status span{color:#c8f09e}
+@keyframes launchSunrise{from{transform:translateY(5px) rotate(-5deg);filter:brightness(.95)}to{transform:translateY(-3px) rotate(5deg);filter:brightness(1.08)}}
+@keyframes seedPulse{0%,100%{transform:scale(.98);box-shadow:0 0 0 9px rgba(222,255,206,.035),0 0 28px rgba(184,255,157,.1)}50%{transform:scale(1.025);box-shadow:0 0 0 13px rgba(222,255,206,.06),0 0 36px rgba(184,255,157,.18)}}
+@keyframes seedGrow{0%,100%{transform:translateY(2px) scale(.96) rotate(-2deg)}50%{transform:translateY(-3px) scale(1.035) rotate(2deg)}}
+@keyframes launchProgress{0%{width:0}35%{width:42%}72%{width:78%}100%{width:100%}}
+@media(prefers-reduced-motion:reduce){
+  .launch-sun,.launch-seed,.launch-seed span,.welcome-screen:after{animation:none!important}
+  /* Keep the progress indicator paced over 6 seconds, even with reduced motion enabled. */
+  .welcome-screen.is-launching .launch-progress span{animation:launchProgress 6s linear forwards!important}
+  .launch-transition,.welcome-screen.is-launching .welcome-card{transition:none}
+  .welcome-screen.is-hidden.is-launching{transition:opacity .2s linear,visibility .2s linear}
+}
+
+/* Enhanced opening animation: sunrise, crop rows, floating leaves and staggered reveal */
+.welcome-screen{isolation:isolate;background:linear-gradient(125deg,#062b18 0%,#0d4827 38%,#1d713a 72%,#2d8545 100%);}
+.welcome-screen::before{width:clamp(300px,48vw,650px);height:clamp(300px,48vw,650px);right:-12%;top:-32%;border-color:rgba(255,255,255,.16);box-shadow:0 0 0 32px rgba(255,255,255,.025),0 0 0 72px rgba(255,255,255,.018);animation:openingHalo 11s ease-in-out infinite alternate;}
+.welcome-screen::after{width:clamp(260px,36vw,480px);height:clamp(260px,36vw,480px);left:-12%;bottom:-28%;border-color:rgba(214,255,193,.19);box-shadow:0 0 0 25px rgba(214,255,193,.025),0 0 0 55px rgba(214,255,193,.018);animation:openingHalo 13s ease-in-out infinite alternate-reverse;}
+.intro-field-lines{position:absolute;z-index:0;inset:0;pointer-events:none;opacity:.25;background:repeating-linear-gradient(164deg,transparent 0 38px,rgba(205,255,190,.15) 39px 41px,transparent 42px 72px);mask-image:linear-gradient(to top,black,transparent 75%);animation:fieldRows 18s linear infinite;}
+.intro-sun-glow{position:absolute;z-index:0;width:clamp(130px,22vw,260px);aspect-ratio:1;border-radius:50%;top:7%;right:13%;background:radial-gradient(circle,rgba(255,223,125,.34) 0%,rgba(255,223,125,.13) 42%,transparent 72%);animation:sunriseGlow 5s ease-in-out infinite alternate;pointer-events:none;}
+.intro-leaf{position:absolute;z-index:0;pointer-events:none;font-size:clamp(25px,4vw,46px);filter:drop-shadow(0 8px 10px rgba(0,0,0,.15));opacity:0;animation:leafJourney 10s ease-in-out infinite;}
+.intro-leaf-a{left:7%;top:24%;animation-delay:.5s}.intro-leaf-b{right:7%;top:61%;font-size:clamp(28px,4.5vw,52px);animation-delay:3.2s}.intro-leaf-c{left:18%;bottom:10%;font-size:clamp(20px,3vw,34px);animation-delay:6s}
+.intro-particle{position:absolute;z-index:0;width:6px;height:6px;border-radius:50%;background:#e3ffb5;box-shadow:0 0 18px 4px rgba(225,255,181,.32);pointer-events:none;animation:particleDrift 6s ease-in-out infinite;}
+.intro-particle-a{left:18%;top:19%}.intro-particle-b{right:22%;top:28%;animation-delay:1.8s}.intro-particle-c{right:12%;bottom:19%;animation-delay:3.4s}
+.welcome-card{animation:welcomeRise .85s cubic-bezier(.2,.8,.2,1) both,cardFloat 8s ease-in-out 1s infinite;backdrop-filter:blur(8px);}
+.welcome-brand{animation:contentReveal .65s .12s both}.welcome-eyebrow{animation:contentReveal .65s .24s both}.welcome-copy h1{animation:contentReveal .7s .34s both}.welcome-copy>p{animation:contentReveal .7s .46s both}.welcome-points{animation:contentReveal .7s .58s both}.welcome-start{animation:contentReveal .7s .7s both,buttonBreath 3.4s 1.5s ease-in-out infinite}.welcome-note{animation:contentReveal .7s .8s both}.welcome-badge-one{animation:badgePop .65s .7s both,badgeFloat 4s 1.4s ease-in-out infinite}.welcome-badge-two{animation:badgePop .65s .9s both,badgeFloat 4.6s 1.6s ease-in-out infinite reverse;}
+@keyframes openingHalo{from{transform:translate3d(-8px,0,0) scale(.96)}to{transform:translate3d(18px,14px,0) scale(1.06)}}
+@keyframes fieldRows{from{background-position:0 0}to{background-position:0 144px}}
+@keyframes sunriseGlow{from{transform:scale(.88);opacity:.65}to{transform:scale(1.12);opacity:1}}
+@keyframes leafJourney{0%{opacity:0;transform:translate3d(0,25px,0) rotate(-25deg)}18%{opacity:.9}52%{transform:translate3d(32px,-30px,0) rotate(18deg)}82%{opacity:.75}100%{opacity:0;transform:translate3d(70px,-70px,0) rotate(45deg)}}
+@keyframes particleDrift{0%,100%{transform:translate(0,0);opacity:.35}50%{transform:translate(13px,-20px);opacity:1}}
+@keyframes contentReveal{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cardFloat{0%,100%{translate:0 0}50%{translate:0 -4px}}
+@keyframes buttonBreath{0%,100%{box-shadow:0 9px 20px rgba(24,120,60,.22)}50%{box-shadow:0 12px 28px rgba(24,120,60,.34)}}
+@keyframes badgePop{from{opacity:0;scale:.86}to{opacity:1;scale:1}}
+@keyframes badgeFloat{0%,100%{translate:0 0}50%{translate:0 -7px}}
+@media(max-width:720px){.intro-leaf-a{left:2%;top:8%}.intro-leaf-b{right:1%;top:76%}.intro-leaf-c{left:5%;bottom:4%}.intro-sun-glow{right:3%;top:2%}.welcome-card{animation:welcomeRise .75s ease both}}
+@media(prefers-reduced-motion:reduce){.intro-field-lines,.intro-sun-glow,.intro-leaf,.intro-particle,.welcome-card,.welcome-brand,.welcome-eyebrow,.welcome-copy h1,.welcome-copy>p,.welcome-points,.welcome-start,.welcome-note,.welcome-badge-one,.welcome-badge-two,.welcome-screen::before,.welcome-screen::after{animation:none!important;opacity:1;transform:none;translate:none;scale:1}}
+
+
+
+/* Gentle, welcoming motion for the AgriAI opening screen */
+.welcome-screen {
+  isolation: isolate;
+  overflow: hidden;
+}
+.welcome-screen::before {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 18% 24%, rgba(247, 214, 111, .20), transparent 34%),
+    radial-gradient(ellipse at 82% 72%, rgba(116, 190, 103, .19), transparent 36%);
+  animation: agriWelcomeGlow 12s ease-in-out infinite alternate;
+}
+.welcome-screen::after {
+  content: "✦";
+  position: absolute;
+  top: 17%;
+  left: 9%;
+  color: rgba(255, 244, 184, .8);
+  font-size: clamp(16px, 2vw, 24px);
+  pointer-events: none;
+  animation: agriWelcomeSparkle 5s ease-in-out infinite;
+}
+.welcome-screen .welcome-card {
+  animation: agriWelcomeCardIn 1.25s cubic-bezier(.2,.75,.25,1) both;
+}
+.welcome-screen .welcome-card h1,
+.welcome-screen .welcome-card h2 {
+  animation: agriWelcomeTextIn 1.05s ease-out both;
+}
+.welcome-screen .welcome-card p {
+  animation: agriWelcomeTextIn 1.2s .12s ease-out both;
+}
+.welcome-screen .welcome-card button,
+.welcome-screen .welcome-card .btn,
+.welcome-screen .welcome-card a {
+  transition: transform .35s ease, box-shadow .35s ease, filter .35s ease;
+}
+.welcome-screen .welcome-card button:hover,
+.welcome-screen .welcome-card .btn:hover,
+.welcome-screen .welcome-card a:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.04);
+}
+@keyframes agriWelcomeGlow {
+  0% { transform: scale(1) translate3d(-.5%, 0, 0); opacity: .75; }
+  100% { transform: scale(1.08) translate3d(.5%, -1%, 0); opacity: 1; }
+}
+@keyframes agriWelcomeSparkle {
+  0%, 100% { opacity: .25; transform: translateY(0) rotate(0deg) scale(.8); }
+  50% { opacity: .95; transform: translateY(-12px) rotate(24deg) scale(1.15); }
+}
+@keyframes agriWelcomeCardIn {
+  from { opacity: 0; transform: translateY(18px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes agriWelcomeTextIn {
+  from { opacity: 0; transform: translateY(9px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .welcome-screen::before,
+  .welcome-screen::after,
+  .welcome-screen .welcome-card,
+  .welcome-screen .welcome-card h1,
+  .welcome-screen .welcome-card h2,
+  .welcome-screen .welcome-card p {
+    animation: none !important;
+  }
+  .welcome-screen .welcome-card button,
+  .welcome-screen .welcome-card .btn,
+  .welcome-screen .welcome-card a {
+    transition: none !important;
+  }
+}
+
+
+/* Cinematic, illustrated sunrise over crop fields — welcome screen only */
+.welcome-screen { background:linear-gradient(180deg,#153e35 0%,#28664a 52%,#1d5734 100%); }
+.realistic-farm-scene {
+  position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none;
+  opacity:.96; isolation:isolate;
+}
+.farm-sunrise {
+  position:absolute; width:clamp(120px,17vw,220px); aspect-ratio:1; border-radius:50%;
+  right:13%; top:8%;
+  background:radial-gradient(circle at 42% 38%,#fff4c6 0%,#ffd982 38%,rgba(255,199,98,.45) 62%,transparent 72%);
+  filter:blur(.4px); animation:farmSunRise 9s ease-in-out infinite alternate;
+}
+.farm-cloud {
+  position:absolute; width:clamp(85px,12vw,150px); height:26px; border-radius:40px;
+  background:rgba(238,250,225,.19); filter:blur(1px);
+  animation:farmCloudDrift 24s linear infinite;
+}
+.farm-cloud:before,.farm-cloud:after {
+  content:""; position:absolute; bottom:7px; border-radius:50%; background:inherit;
+}
+.farm-cloud:before {width:43px;height:43px;left:17px}
+.farm-cloud:after {width:58px;height:53px;left:43px}
+.farm-cloud-one {top:19%;left:12%}
+.farm-cloud-two {top:29%;left:58%;transform:scale(.72);animation-duration:32s;animation-delay:-12s;opacity:.7}
+.farm-mountain {
+  position:absolute; left:-8%; width:116%; bottom:18%; height:40%;
+  clip-path:polygon(0 73%,12% 48%,22% 66%,34% 26%,45% 62%,58% 36%,70% 68%,82% 31%,100% 67%,100% 100%,0 100%);
+}
+.farm-mountain-back {background:linear-gradient(180deg,rgba(120,167,116,.45),rgba(52,113,71,.58));transform:translateY(-25px) scaleX(1.05)}
+.farm-mountain-front {bottom:11%;height:32%;background:linear-gradient(180deg,rgba(65,133,76,.78),rgba(24,88,47,.94));clip-path:polygon(0 54%,14% 26%,29% 59%,42% 18%,57% 56%,72% 30%,86% 62%,100% 39%,100% 100%,0 100%)}
+.farm-hills {
+  position:absolute;left:-10%;right:-10%;bottom:-12%;height:43%;
+  background:linear-gradient(165deg,#6eaa52 0%,#387f3d 48%,#174a2a 100%);
+  border-radius:50% 50% 0 0 / 22% 22% 0 0; transform:rotate(-2deg);
+}
+.farm-crop-field {
+  position:absolute;left:-10%;right:-10%;bottom:-17%;height:45%;overflow:hidden;
+  transform:perspective(420px) rotateX(20deg);transform-origin:bottom center;
+  background:repeating-linear-gradient(174deg,transparent 0 24px,rgba(206,239,133,.18) 25px 27px,rgba(10,61,28,.16) 28px 39px);
+  mask-image:linear-gradient(to top,black 35%,transparent 100%);
+}
+.crop-row {
+  position:absolute;left:50%;bottom:-10%;width:3px;height:150%;border-radius:100%;
+  background:linear-gradient(to top,rgba(8,57,25,.0),rgba(212,244,142,.55),rgba(8,57,25,0));
+  transform-origin:bottom center; opacity:.6; animation:cropSway 5s ease-in-out infinite alternate;
+}
+.crop-row-one{transform:rotate(-42deg);margin-left:-180px}
+.crop-row-two{transform:rotate(-24deg);margin-left:-90px;animation-delay:-1.4s}
+.crop-row-three{transform:rotate(0deg);animation-delay:-2.1s}
+.crop-row-four{transform:rotate(24deg);margin-left:90px;animation-delay:-.8s}
+.crop-row-five{transform:rotate(42deg);margin-left:180px;animation-delay:-2.7s}
+.farm-bird {
+  position:absolute;color:rgba(248,255,224,.76);font-size:35px;font-weight:700;
+  top:23%;left:36%;transform:rotate(-18deg);animation:birdGlide 11s ease-in-out infinite;
+}
+.farm-bird-two {top:31%;left:44%;font-size:24px;animation-delay:-4s;animation-duration:14s;opacity:.7}
+@keyframes farmSunRise {from{transform:translateY(10px) scale(.94);filter:brightness(.94)}to{transform:translateY(-8px) scale(1.04);filter:brightness(1.1)}}
+@keyframes farmCloudDrift {from{translate:-20px 0}to{translate:70px 5px}}
+@keyframes cropSway {from{filter:brightness(.9);scale:1 .98}to{filter:brightness(1.15);scale:1 1.02}}
+@keyframes birdGlide {0%,100%{translate:0 0;rotate:-4deg}50%{translate:24px -9px;rotate:5deg}}
+/* Keep the scene decorative and behind the readable welcome card. */
+.welcome-screen .realistic-farm-scene {z-index:0}
+.welcome-screen .intro-field-lines,.welcome-screen .intro-sun-glow,
+.welcome-screen .intro-leaf,.welcome-screen .intro-particle {z-index:0}
+.welcome-screen .welcome-card {z-index:2;box-shadow:0 28px 90px rgba(0,0,0,.32)}
+@media(max-width:720px) {
+  .farm-sunrise {right:4%;top:3%;width:125px}
+  .farm-cloud-one {left:0;top:15%}
+  .farm-cloud-two {left:56%;top:25%}
+  .farm-bird {top:13%;left:24%}
+}
+@media(prefers-reduced-motion:reduce) {
+  .farm-sunrise,.farm-cloud,.crop-row,.farm-bird {animation:none!important}
+}
+
+
+
+/* VISIBILITY FIX: make the welcome-scene motion clearly noticeable around the card */
+.welcome-screen .realistic-farm-scene {
+  position:absolute !important; inset:0 !important; z-index:0 !important;
+  overflow:hidden !important; pointer-events:none !important; opacity:1 !important;
+}
+.welcome-screen .farm-sunrise {
+  width:clamp(150px,19vw,250px) !important;
+  background:radial-gradient(circle,#fff8d5 0%,#ffd45e 27%,rgba(255,177,55,.55) 48%,transparent 72%) !important;
+  animation:agriSunBreath 7s ease-in-out infinite alternate !important;
+}
+.welcome-screen .farm-cloud {
+  height:25px !important;
+  background:rgba(240,255,237,.62) !important;
+  filter:drop-shadow(0 5px 9px rgba(8,55,29,.12)) !important;
+  animation:agriCloudTravel 19s linear infinite alternate !important;
+}
+.welcome-screen .farm-cloud-one {top:15% !important;left:3% !important;opacity:.85 !important}
+.welcome-screen .farm-cloud-two {top:26% !important;left:66% !important;opacity:.75 !important;animation-duration:25s !important}
+.welcome-screen .farm-mountain-back {
+  background:linear-gradient(180deg,rgba(151,202,133,.78),rgba(67,139,76,.82)) !important;
+  animation:agriHillDrift 16s ease-in-out infinite alternate !important;
+}
+.welcome-screen .farm-mountain-front {
+  background:linear-gradient(180deg,rgba(69,153,70,.92),rgba(22,103,48,.96)) !important;
+  animation:agriHillDrift 12s ease-in-out infinite alternate-reverse !important;
+}
+.welcome-screen .farm-crop-field {
+  animation:agriFieldSway 8s ease-in-out infinite alternate !important;
+  transform-origin:bottom center !important;
+}
+.welcome-screen .crop-row {
+  animation:agriRowsMove 9s linear infinite alternate !important;
+}
+.welcome-screen .crop-row-two {animation-delay:-2s !important}
+.welcome-screen .crop-row-three {animation-delay:-4s !important}
+.welcome-screen .crop-row-four {animation-delay:-6s !important}
+.welcome-screen .crop-row-five {animation-delay:-3s !important}
+.welcome-screen .farm-bird {
+  color:#f7ffe8 !important;
+  font-size:clamp(25px,3vw,39px) !important;
+  text-shadow:0 2px 6px rgba(0,45,20,.45) !important;
+  animation:agriBirdFlight 8s ease-in-out infinite !important;
+}
+.welcome-screen .farm-bird-two {animation-duration:11s !important;animation-delay:-3s !important}
+.welcome-screen .intro-leaf {filter:drop-shadow(0 4px 8px rgba(0,0,0,.28)) !important}
+.welcome-screen .intro-particle {box-shadow:0 0 20px 6px rgba(225,255,181,.6) !important}
+@keyframes agriSunBreath {
+  from {transform:translateY(12px) scale(.9);filter:brightness(.92)}
+  to {transform:translateY(-14px) scale(1.1);filter:brightness(1.18)}
+}
+@keyframes agriCloudTravel {
+  from {translate:-18px 0;transform:scale(.94)}
+  to {translate:clamp(24px,6vw,85px) 8px;transform:scale(1.06)}
+}
+@keyframes agriHillDrift {
+  from {translate:-8px 0;filter:brightness(.94)}
+  to {translate:12px -7px;filter:brightness(1.08)}
+}
+@keyframes agriFieldSway {
+  from {transform:perspective(700px) rotateX(1deg) scaleX(1)}
+  to {transform:perspective(700px) rotateX(-1deg) scaleX(1.025)}
+}
+@keyframes agriRowsMove {
+  from {filter:brightness(.9);translate:0 0}
+  to {filter:brightness(1.2);translate:0 -5px}
+}
+@keyframes agriBirdFlight {
+  0%,100% {translate:-5px 2px;rotate:-8deg}
+  50% {translate:35px -18px;rotate:8deg}
+}
+@media (prefers-reduced-motion: reduce) {
+  .welcome-screen .farm-sunrise,.welcome-screen .farm-cloud,
+  .welcome-screen .farm-mountain-back,.welcome-screen .farm-mountain-front,
+  .welcome-screen .farm-crop-field,.welcome-screen .crop-row,
+  .welcome-screen .farm-bird {animation:none !important}
+}
+
+
+
+/* COMPLETE INTRO + WELCOME ANIMATION UPGRADE */
+.welcome-screen .realistic-farm-scene,
+.welcome-screen .intro-field-lines,
+.welcome-screen .intro-sun-glow,
+.welcome-screen .intro-leaf,
+.welcome-screen .intro-particle { will-change: transform, opacity; }
+
+.welcome-screen .launch-transition {
+  background:
+    radial-gradient(ellipse at 50% 28%, rgba(255,209,103,.28), transparent 26%),
+    linear-gradient(180deg, #153f2c 0%, #216c3b 58%, #102f20 100%) !important;
+  overflow:hidden;
+}
+.welcome-screen.is-launching .launch-transition::before {
+  content:"";
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse at 50% 83%, rgba(106,188,78,.45), transparent 43%),
+    repeating-linear-gradient(166deg, transparent 0 42px, rgba(193,240,144,.13) 43px 46px, transparent 47px 76px);
+  transform-origin:bottom center;
+  animation:introFieldReveal 6s ease-in-out infinite alternate;
+}
+.welcome-screen.is-launching .launch-transition::after {
+  content:"";
+  position:absolute; width:180px; height:180px; border-radius:50%;
+  top:calc(50% - 210px); left:calc(50% - 90px);
+  background:radial-gradient(circle, rgba(255,238,160,.98) 0 12%, rgba(255,191,73,.62) 28%, rgba(255,187,73,.12) 55%, transparent 72%);
+  animation:introSunRise 5s ease-in-out infinite alternate;
+}
+.welcome-screen .launch-transition > * { position:relative; z-index:1; }
+.welcome-screen .launch-sun { animation:launchSunrise 5s ease-in-out infinite alternate, introSunFloat 4s ease-in-out infinite !important; }
+.welcome-screen .launch-seed {
+  width:128px !important; height:128px !important;
+  box-shadow:0 0 0 14px rgba(222,255,206,.07), 0 0 55px rgba(184,255,157,.28) !important;
+}
+.welcome-screen .launch-seed span { animation:seedGrow 5.2s ease-in-out infinite !important; }
+.welcome-screen .launch-title { text-shadow:0 3px 24px rgba(0,0,0,.22); }
+.welcome-screen .launch-progress { height:6px !important; }
+.welcome-screen .launch-progress span { animation-duration:6s !important; }
+.welcome-screen .launch-message { animation:introMessageFloat 4s ease-in-out infinite alternate; }
+
+@keyframes introFieldReveal {
+  from { transform:perspective(700px) rotateX(8deg) scale(1); opacity:.55; }
+  to { transform:perspective(700px) rotateX(-2deg) scale(1.08); opacity:1; }
+}
+@keyframes introSunRise {
+  from { transform:translateY(30px) scale(.82); opacity:.62; }
+  to { transform:translateY(-18px) scale(1.12); opacity:1; }
+}
+@keyframes introSunFloat {
+  0%,100% { transform:translateY(0) rotate(-4deg); }
+  50% { transform:translateY(-12px) rotate(4deg); }
+}
+@keyframes introMessageFloat {
+  from { transform:translateY(2px); opacity:.78; }
+  to { transform:translateY(-3px); opacity:1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .welcome-screen .launch-transition::before,
+  .welcome-screen .launch-transition::after,
+  .welcome-screen .launch-sun,
+  .welcome-screen .launch-message { animation:none !important; }
+}
+
+
+/* Requested intro duration: approximately 6 seconds before the main website */
+.welcome-screen .launch-progress span {
+  animation-duration: 6s !important;
+}
+
+</style>
+</head>
+<body class="intro-locked">
+<a href="#home" style="position:absolute;left:-9999px;top:auto;padding:10px;background:#fff;color:#176e38;z-index:10000" onfocus="this.style.left='10px'" onblur="this.style.left='-9999px'">Skip introduction</a>
+
+<div class="welcome-screen" id="welcomeScreen" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+
+  <div class="realistic-farm-scene" aria-hidden="true">
+    <div class="farm-sunrise"></div>
+    <div class="farm-cloud farm-cloud-one"></div>
+    <div class="farm-cloud farm-cloud-two"></div>
+    <div class="farm-mountain farm-mountain-back"></div>
+    <div class="farm-mountain farm-mountain-front"></div>
+    <div class="farm-hills"></div>
+    <div class="farm-crop-field">
+      <span class="crop-row crop-row-one"></span>
+      <span class="crop-row crop-row-two"></span>
+      <span class="crop-row crop-row-three"></span>
+      <span class="crop-row crop-row-four"></span>
+      <span class="crop-row crop-row-five"></span>
+    </div>
+    <span class="farm-bird farm-bird-one">⌁</span>
+    <span class="farm-bird farm-bird-two">⌁</span>
+  </div>
+  <div class="intro-field-lines" aria-hidden="true"></div>
+  <div class="intro-sun-glow" aria-hidden="true"></div>
+  <div class="intro-leaf intro-leaf-a" aria-hidden="true">🍃</div>
+  <div class="intro-leaf intro-leaf-b" aria-hidden="true">🌿</div>
+  <div class="intro-leaf intro-leaf-c" aria-hidden="true">🍃</div>
+  <div class="intro-particle intro-particle-a" aria-hidden="true"></div>
+  <div class="intro-particle intro-particle-b" aria-hidden="true"></div>
+  <div class="intro-particle intro-particle-c" aria-hidden="true"></div>
+  <div class="launch-transition" id="launchTransition" aria-live="polite" aria-label="Preparing AgriAI">
+    <div class="launch-sun" aria-hidden="true">☀️</div>
+    <div class="launch-seed" aria-hidden="true"><span>🌱</span></div>
+    <div class="launch-title">Preparing your field</div>
+    <p class="launch-message" id="launchMessage">Growing smarter farming tools for you…</p>
+    <div class="launch-progress" aria-hidden="true"><span></span></div>
+    <div class="launch-status">AGRI<span>AI</span> · SMART AGRICULTURE</div>
+  </div>
+  <div class="welcome-card">
+    <div class="welcome-copy">
+      <div class="welcome-brand"><span class="welcome-brand-icon">🌱</span> AgriAI</div>
+      <div class="welcome-eyebrow">Smart Agriculture Assistant</div>
+      <h1 id="welcomeTitle">Grow smarter.<br><span>Farm better.</span></h1>
+      <p>Your intelligent farming companion helps you understand crop symptoms, explore possible plant health problems, and get practical prevention tips for healthier crops.</p>
+      <div class="welcome-points">
+        <div class="welcome-point"><span class="welcome-check">✓</span> AI-assisted crop symptom analysis</div>
+        <div class="welcome-point"><span class="welcome-check">✓</span> Practical crop care and prevention advice</div>
+        <div class="welcome-point"><span class="welcome-check">✓</span> Simple guidance for smarter farming</div>
+      </div>
+      <button class="welcome-start" onclick="enterAgriAI()">Get Started <span aria-hidden="true">→</span></button>
+      <div class="welcome-note">Better information. Thoughtful decisions. Healthier harvests.</div>
+    </div>
+    <div class="welcome-art" aria-hidden="true">
+      <div class="welcome-orbit"></div>
+      <div class="welcome-plant"><span class="sun">☀️</span><span class="sprout">🌱</span><span class="soil"></span></div>
+      <div class="welcome-badge welcome-badge-one">🌿 <span>Crop care<small>Helpful prevention tips</small></span></div>
+      <div class="welcome-badge welcome-badge-two">🤖 <span>AI assistant<small>Guidance for your farm</small></span></div>
+    </div>
+  </div>
+</div>
+
+<header>
+<div class="logo"><div class="logo-icon">🌱</div>AgriAI</div>
+<nav>
+<a href="#home">Home</a><a href="#features">Features</a><a href="#field-notes">Field Notes</a><a href="#doctor">Crop Doctor</a><a href="#advisory">Advisory</a>
+</nav>
+<div class="global-language-wrap"><label for="siteLanguage" class="global-language-label">🌐 Language</label><select id="siteLanguage" aria-label="Website language" class="global-language"><option value="en-IN">English</option><option value="te-IN">తెలుగు (Telugu)</option><option value="hi-IN">हिन्दी (Hindi)</option><option value="ta-IN">தமிழ் (Tamil)</option><option value="kn-IN">ಕನ್ನಡ (Kannada)</option><option value="ml-IN">മലയാളം (Malayalam)</option><option value="mr-IN">मराठी (Marathi)</option><option value="bn-IN">বাংলা (Bengali)</option></select><span id="siteLanguageStatus" aria-live="polite" style="position:absolute;top:100%;right:0;z-index:20;font-size:10px;color:#18783c;background:#fff;padding:2px 5px;border-radius:4px;white-space:nowrap"></span></div><button class="header-button" onclick="scrollToDoctor()">Try Crop Doctor</button>
+</header>
+
+<section class="hero" id="home">
+<div>
+<div class="section-kicker">🌾 Practical guidance for every growing season</div><h1>Your Farm's <span>AI Doctor.</span></h1>
+<p>Detect crop diseases, monitor soil conditions, optimize irrigation and receive intelligent agricultural recommendations from one smart platform.</p>
+<div class="hero-buttons">
+<button class="primary-button" onclick="scrollToDoctor()">Start AI Diagnosis</button>
+<button class="secondary-button" onclick="showAdvisory()">View Advisory</button>
+</div>
+</div>
+
+<div class="hero-card">
+<div class="farm-header"><h3>Farm Health Monitor</h3><span class="status">SYSTEM ACTIVE</span></div>
+<div class="crop-health">
+<div class="health-top"><div><small>Overall Crop Health</small></div><div class="health-score">84%</div></div>
+<div class="progress"><div class="progress-bar"></div></div>
+</div>
+<div class="sensor-grid">
+<div class="sensor"><small>Temperature</small><strong>29°C</strong></div>
+<div class="sensor"><small>Humidity</small><strong>68%</strong></div>
+<div class="sensor"><small>Soil Moisture</small><strong>42%</strong></div>
+<div class="sensor"><small>Disease Risk</small><strong style="color:#d08b13">Medium</strong></div>
+</div>
+</div>
+</section>
+
+<section class="section" id="features">
+<div class="section-title"><h2>Smart Agriculture, Simplified</h2><p>Technology designed to help farmers make better decisions every day.</p></div>
+<div class="features">
+<div class="feature"><div class="feature-icon">🔬</div><h3>AI Crop Doctor</h3><p>Analyze crop symptoms and identify possible diseases before they spread across the field.</p></div>
+<div class="feature"><div class="feature-icon">💧</div><h3>Smart Irrigation</h3><p>Get irrigation recommendations based on soil moisture, temperature and crop conditions.</p></div>
+<div class="feature"><div class="feature-icon">🤖</div><h3>Autonomous Advisory</h3><p>Receive automatic recommendations for crop protection, irrigation and field monitoring.</p></div>
+<div class="feature"><div class="feature-icon">📊</div><h3>Farm Analytics</h3><p>Track crop health, environmental conditions and farming decisions from one dashboard.</p></div>
+</div>
+</section>
+
+
+<section class="section agri-insights" id="field-notes">
+  <div class="section-title">
+    <div class="section-kicker">🌱 The farmer's knowledge hub</div>
+    <h2>Field Notes for Healthier Harvests</h2>
+    <p>Practical, easy-to-follow ideas for making informed decisions on your farm.</p>
+  </div>
+  <p class="insights-intro">Explore focused guides on soil, water, crop health and seasonal planning. Use them as a starting point, then adapt decisions to your crop stage, local weather and advice from your agricultural extension officer.</p>
+  <div class="insight-grid">
+    <article class="insight-card">
+      <div class="insight-visual" role="img" aria-label="Healthy green crop rows in a field" style="background-image:url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=85')">
+        <span class="insight-tag">Soil health</span>
+      </div>
+      <div class="insight-body">
+        <h3>Build healthier soil, season after season</h3>
+        <p>Check soil condition before adding inputs. Soil testing, suitable organic matter and balanced nutrients can support stronger roots and more resilient crops.</p>
+        <button class="insight-link" onclick="openFieldGuide('soil')">Explore soil-care tips →</button>
+      </div>
+    </article>
+    <article class="insight-card">
+      <div class="insight-visual" role="img" aria-label="Water being supplied to growing crops" style="background-image:url('https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=1000&q=85')">
+        <span class="insight-tag">Water management</span>
+      </div>
+      <div class="insight-body">
+        <h3>Water crops thoughtfully</h3>
+        <p>Check soil moisture near the root zone, crop growth stage and the weather forecast. Avoid fixed watering schedules when field conditions say otherwise.</p>
+        <button class="insight-link" onclick="openFieldGuide('water')">Explore irrigation tips →</button>
+      </div>
+    </article>
+    <article class="insight-card">
+      <div class="insight-visual" role="img" aria-label="Close-up of healthy leaves growing on a plant" style="background-image:url('https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=1000&q=85')">
+        <span class="insight-tag">Crop protection</span>
+      </div>
+      <div class="insight-body">
+        <h3>Spot crop stress early</h3>
+        <p>Inspect both sides of leaves, stems and fruits regularly. Note when symptoms began and whether they are spreading before deciding on a treatment.</p>
+        <button class="insight-link" onclick="openFieldGuide('protection')">Explore crop-check tips →</button>
+      </div>
+    </article>
+    <article class="insight-card">
+      <div class="insight-visual" role="img" aria-label="Rows of crops growing under natural sunlight" style="background-image:url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1000&q=85')">
+        <span class="insight-tag">Seasonal planning</span>
+      </div>
+      <div class="insight-body">
+        <h3>Plan around local conditions</h3>
+        <p>Consider local rainfall outlooks, available water, soil type, seed suitability and market needs when planning planting and field operations.</p>
+        <button class="insight-link" onclick="openFieldGuide('season')">Explore planning tips →</button>
+      </div>
+    </article>
+    <article class="insight-card">
+      <div class="insight-visual" role="img" aria-label="Farmland landscape with green plants" style="background-image:url('https://images.unsplash.com/photo-1499529112087-3cb3b73bc4c7?auto=format&fit=crop&w=1000&q=85')">
+        <span class="insight-tag">Farm observation</span>
+      </div>
+      <div class="insight-body">
+        <h3>Keep a simple field record</h3>
+        <p>Record crop variety, sowing date, rainfall, irrigation, symptoms and actions taken. These notes make it easier to compare changes and seek expert help.</p>
+        <button class="insight-link" onclick="openFieldGuide('records')">Explore record-keeping →</button>
+      </div>
+    </article>
+    <article class="insight-card">
+      <div class="insight-visual" role="img" aria-label="Young green seedlings growing in a field" style="background-image:url('https://images.unsplash.com/photo-1492496913980-501348b61469?auto=format&fit=crop&w=1000&q=85')">
+        <span class="insight-tag">Integrated pest management</span>
+      </div>
+      <div class="insight-body">
+        <h3>Use a careful, integrated approach</h3>
+        <p>Identify the pest first, monitor how widespread it is, protect beneficial insects and use only locally approved products when needed and as directed.</p>
+        <button class="insight-link" onclick="openFieldGuide('pests')">Explore pest-management tips →</button>
+      </div>
+    </article>
+  </div>
+  <p class="insight-footnote">Agricultural note: these posts provide general educational guidance, not a confirmed diagnosis or a location-specific spray prescription. Verify important crop-protection decisions with a qualified local agricultural adviser and follow product labels and local regulations.</p>
+</section>
+
+<section class="section dashboard-section" id="doctor">
+<div class="section-title"><h2>AI Crop Doctor</h2><p>Enter your crop conditions and receive an instant agricultural recommendation.</p></div>
+<div class="dashboard">
+<div class="panel">
+<h3>Crop Information</h3>
+<label>Crop</label>
+<select id="crop" aria-label="Select crop">
+<option>Tomato</option>
+<option>Rice</option>
+<option>Cotton</option>
+<option>Chilli</option>
+<option>Maize</option>
+<option>Wheat</option>
+<option>Groundnut</option>
+<option>Sugarcane</option>
+<option>Potato</option>
+<option>Onion</option>
+<option>Brinjal (Eggplant)</option>
+<option>Okra (Lady's Finger)</option>
+<option>Soybean</option>
+<option>Chickpea</option>
+<option>Pigeon Pea</option>
+<option>Banana</option>
+<option>Mango</option>
+<option>Grapes</option>
+<option>Turmeric</option>
+<option>Mustard</option>
+<option>Sunflower</option>
+<option>Millet</option>
+<option>Sorghum</option>
+<option>Sesame</option>
+<option>Cucumber</option>
+</select>
+<label>Temperature (°C)</label><input id="temperature" type="number" value="30">
+<label>Humidity (%)</label><input id="humidity" type="number" value="70">
+<label>Soil Moisture (%)</label><input id="soil" type="number" value="40">
+<label>Select Symptom Type</label>
+<select id="symptomType" onchange="showSymptomsByType()">
+    <option value="">-- Select symptom type --</option>
+    <option value="leaf">Leaf Symptoms</option>
+    <option value="pest">Pest / Insect Symptoms</option>
+    <option value="plant">Plant Growth Symptoms</option>
+    <option value="fruit">Fruit / Root Symptoms</option>
+</select>
+
+
+<div class="voice-module">
+    <div class="voice-head">
+        <strong>🎙️ Speak Your Crop Problem</strong>
+        <span style="font-size:12px;color:#18783c;font-weight:700;">Farmer Friendly</span>
+    </div>
+    <p class="voice-help">
+        You can describe the problem naturally in your language. For example:
+        “My tomato leaves are turning yellow and the plant is becoming weak.”
+    </p>
+    <div class="voice-controls">
+        <select id="voiceLanguage" class="voice-language" aria-label="Voice language">
+            <option value="en-IN">English (India)</option>
+            <option value="te-IN">తెలుగు (Telugu)</option>
+            <option value="hi-IN">हिन्दी (Hindi)</option>
+            <option value="ta-IN">தமிழ் (Tamil)</option>
+            <option value="kn-IN">ಕನ್ನಡ (Kannada)</option>
+            <option value="ml-IN">മലയാളം (Malayalam)</option>
+            <option value="mr-IN">मराठी (Marathi)</option>
+            <option value="bn-IN">বাংলা (Bengali)</option>
+        </select>
+        <button type="button" class="voice-button" id="voiceButton" onclick="toggleVoiceInput()">
+            🎙️ Start Speaking
+        </button>
+    </div>
+    <div class="voice-status" id="voiceStatus">Choose your language and describe the crop problem.</div>
+    <textarea id="voiceTranscript" class="voice-transcript" placeholder="Your spoken description will appear here..."></textarea>
+    <div style="margin-top:10px;font-weight:700;color:#18783c;">🌐 English translation for AI analysis</div>
+    <textarea id="englishTranscript" class="voice-transcript" style="margin-top:6px;min-height:80px;background:#f7fbf8;" placeholder="Your speech will be translated into English here before AI analysis..." readonly></textarea>
+    <button type="button" class="voice-analyze" onclick="analyzeVoiceProblem()">
+        🧠 Analyze Spoken Problem
+    </button>
+</div>
+
+<div class="symptom-options" id="symptomOptions">
+    <div class="symptom-placeholder" id="symptomPlaceholder">Select a symptom type above to view symptoms.</div>
+</div>
+
+<div class="selected-symptoms" id="selectedSymptoms">
+    No symptoms selected
+</div>
+
+<input type="hidden" id="symptoms">
+
+<div style="margin-top:12px;padding:12px 14px;border-radius:10px;background:#f4faf5;border:1px solid #d8eadb;color:#3f5b48;font-size:13px;line-height:1.5;">
+<strong>What does “Analyze Crop” do?</strong><br>It combines the selected crop, symptoms, voice/English description, temperature, humidity and soil moisture to perform the final crop-health and disease-risk analysis. It is the final analysis step after you enter the crop information.
+</div>
+<div class="panel" style="margin-top:16px;border:1px solid #cfe3d2;background:#fbfefb;">
+  <h3 style="margin-bottom:8px;">📊 Automatic Farm Records</h3>
+  <p style="font-size:13px;line-height:1.6;color:#657369;margin-bottom:12px;">Each crop analysis is saved in this browser automatically. Connect a CSV file once to keep updating an Excel-compatible file on your computer while this page is open.</p>
+  <button type="button" class="analyze-button" style="margin-bottom:9px;background:#245f9e;" onclick="connectFarmExcelFile()">📁 Connect / Create Excel File</button>
+  <button type="button" class="analyze-button" style="background:#18783c;" onclick="downloadFarmRecords()">⬇️ Download All Records for Excel</button>
+  <div id="farmSaveStatus" role="status" style="font-size:12px;line-height:1.5;margin-top:10px;color:#557060;">No Excel file connected yet. Browser records are saved automatically.</div>
+  <div id="farmRecordCount" style="font-size:12px;margin-top:5px;color:#18783c;font-weight:700;">0 saved records</div>
+</div>
+<button class="analyze-button" onclick="diagnoseCrop()">🔎 Analyze Crop</button>
+</div>
+
+<div class="panel">
+<h3>AI Agricultural Advisory</h3>
+<div class="result">
+<div class="result-header"><strong>Diagnosis Result</strong><span class="risk" id="risk">WAITING</span></div>
+<div class="diagnosis">
+<h4 id="diagnosisTitle">No Diagnosis Yet</h4>
+<p id="diagnosisText">Enter your crop information and click "Analyze Crop".</p>
+<div class="result-voice">
+    <button type="button" id="hearResultButton" class="hear-result-button" onclick="speakLastDiagnosis()" disabled>🔊 Hear Result Again</button>
+    <button type="button" id="muteResultButton" class="result-mute-button" onclick="toggleResultVoiceMute()" disabled aria-label="Mute diagnosis voice">🔊 Mute Voice</button>
+    <span id="resultVoiceStatus">The diagnosis will be spoken in your selected language after analysis.</span>
+</div>
+</div>
+<div class="diagnosis" style="border-left-color:#18783c;background:#f2faf4;"><h4>🧠 What the farmer meant</h4><p id="intentInterpretation">No spoken intent analyzed yet.</p><p id="intentClues" style="margin-top:8px;color:#657369;font-size:13px;"></p></div>
+<div class="recommendations">
+<div class="recommendation"><strong>Irrigation</strong><span id="irrigation">Waiting for analysis...</span></div>
+<div class="recommendation"><strong>Disease Risk</strong><span id="disease">Waiting for analysis...</span></div>
+<div class="recommendation"><strong>Crop Protection</strong><span id="protection">Waiting for analysis...</span></div>
+<div class="recommendation"><strong>Advisor: Prevention Tips</strong><span id="action">Run the crop analysis to receive practical prevention advice.</span></div>
+<div class="recommendation solution-card"><strong>🧰 Solution: What to Use & Precautions</strong><span id="solution" class="solution-details">Run the crop analysis to see practical crop-care options and precautions. Do not apply pesticides or fertilizers based only on an AI result.</span></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="cta" id="advisory">
+<div><h2>Smarter Decisions. Healthier Crops.</h2><p>Build a digital farming assistant that works alongside farmers every day.</p></div>
+<button onclick="scrollToDoctor()">Launch Crop Doctor</button>
+</section>
+
+<footer>
+<strong>AgriAI</strong>
+<span>AI Crop Doctor & Agricultural Advisory · Educational guidance, not a substitute for local expert diagnosis.</span>
+<span>© 2026 AgriAI</span>
+</footer>
+
+<script>
+
+function openFieldGuide(topic){
+  const guides={
+    soil:{title:"Soil-care checklist",items:["If possible, test soil through a recognised local soil-testing service before applying fertiliser.","Add well-decomposed organic matter when suitable for the crop and soil.","Avoid repeated fertiliser applications without checking crop needs.","Keep a note of soil test results and inputs used."]},
+    water:{title:"Irrigation checklist",items:["Check moisture in the crop's root zone, not only the dry surface.","Consider crop stage, soil texture, recent rainfall and upcoming weather.","Avoid waterlogging and unnecessary irrigation where drainage is poor.","Check irrigation equipment for leaks and uneven water distribution."]},
+    protection:{title:"Crop inspection checklist",items:["Inspect several plants across the field, including healthy and affected plants.","Look at both leaf surfaces, stems, growing tips, fruits and roots where practical.","Record the first date noticed, spread pattern and recent weather.","Treat the AI result as a possible lead, not a confirmed diagnosis."]},
+    season:{title:"Season-planning checklist",items:["Check locally issued weather and rainfall guidance.","Choose varieties and planting windows suited to local conditions.","Plan water access, labour, seed availability and likely input needs.","Ask a local extension officer about crop-specific recommendations."]},
+    records:{title:"Simple field-record checklist",items:["Record crop, variety, plot and sowing or transplanting date.","Log rainfall, irrigation, fertiliser and crop-protection actions.","Photograph symptoms over time from a similar angle where possible.","Keep receipts and product labels alongside the field notes."]},
+    pests:{title:"Integrated pest-management checklist",items:["Identify the likely pest and monitor its numbers before taking action.","Remove or manage affected material only where recommended for that crop.","Protect pollinators and beneficial insects where possible.","Use only locally approved products, following the label and expert guidance."]}
+  };
+  const guide=guides[topic];
+  if(!guide)return;
+  const old=document.getElementById("fieldGuideDialog");
+  if(old)old.remove();
+  const dialog=document.createElement("dialog");
+  dialog.id="fieldGuideDialog";
+  dialog.style.cssText="max-width:560px;width:calc(100% - 32px);border:0;border-radius:18px;padding:26px;color:#173b24;box-shadow:0 25px 80px rgba(0,0,0,.28);";
+  dialog.innerHTML='<h2 style="margin:0 0 14px;color:#176e38;font-size:23px">'+guide.title+'</h2><ul style="padding-left:21px;line-height:1.7;color:#526558">'+guide.items.map(item=>'<li style="margin:0 0 9px">'+item+'</li>').join('')+'</ul><p style="font-size:12px;line-height:1.6;color:#7a887e;margin:15px 0">Guidance is general. Crop-specific decisions should be checked against local conditions and qualified agricultural advice.</p><button id="closeFieldGuide" style="background:#18783c;color:white;border:0;border-radius:9px;padding:11px 17px;font-weight:700;cursor:pointer">Close guide</button>';
+  document.body.appendChild(dialog);
+  dialog.addEventListener("click",e=>{if(e.target===dialog)dialog.close();});
+  dialog.querySelector("#closeFieldGuide").addEventListener("click",()=>dialog.close());
+  dialog.addEventListener("close",()=>dialog.remove(),{once:true});
+  if(typeof dialog.showModal==="function")dialog.showModal();else alert(guide.title+"\n\n"+guide.items.join("\n"));
+}
+
+let agriAILaunching = false;
+function enterAgriAI(){
+  const welcome=document.getElementById("welcomeScreen");
+  const startButton=welcome&&welcome.querySelector(".welcome-start");
+  const message=document.getElementById("launchMessage");
+  if(!welcome||agriAILaunching)return;
+  agriAILaunching=true;
+  if(startButton){startButton.disabled=true;startButton.setAttribute("aria-busy","true");}
+  welcome.classList.add("is-launching");
+  const messages=[
+    "Growing smarter farming tools for you…",
+    "Preparing crop care and field guidance…",
+    "Checking soil, water and crop health resources…",
+    "Organising your multilingual farming workspace…",
+    "Your AgriAI workspace is ready!"
+  ];
+  if(message)message.textContent=messages[0];
+  const reducedMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Keep the launch screen visible for the requested 6 seconds.
+  // Reduced-motion preferences should reduce movement, not shorten the loading screen.
+  const delay=6000;
+  if(!reducedMotion){
+    window.setTimeout(()=>{if(message)message.textContent=messages[1];},1200);
+    window.setTimeout(()=>{if(message)message.textContent=messages[2];},2400);
+    window.setTimeout(()=>{if(message)message.textContent=messages[3];},3600);
+    window.setTimeout(()=>{if(message)message.textContent=messages[4];},4800);
+  } else {
+    if(message)message.textContent=messages[4];
+  }
+  window.setTimeout(()=>{
+    // Keep the launch layer active while the entire welcome overlay fades out.
+    // Removing is-launching here would restart the welcome-card animation and cause a flash.
+    welcome.classList.add("is-hidden");
+    document.body.classList.remove("intro-locked");
+    window.setTimeout(()=>{
+      welcome.style.display="none";
+      welcome.classList.remove("is-launching");
+    },reducedMotion?200:850);
+  },delay);
+}
+function scrollToDoctor(){document.getElementById("doctor").scrollIntoView({behavior:"smooth"});}
+function showAdvisory(){document.getElementById("advisory").scrollIntoView({behavior:"smooth"});}
+
+
+const selectedSymptoms = new Set();
+let recognition = null;
+let isListening = false;
+
+const symptomGroups = {
+    leaf: [
+        ["leaves are wilting", "Leaves are wilting"],
+        ["leaves are turning yellow", "Leaves are turning yellow"],
+        ["white powder on leaves", "White powder on leaves"],
+        ["leaves are drying", "Leaves are drying"],
+        ["leaves are falling", "Leaves are falling"],
+        ["leaves have black patches", "Leaves have black patches"],
+        ["leaves have white spots", "Leaves have white spots"],
+        ["leaf edges are burning", "Leaf edges are burning"],
+        ["leaves are drooping", "Leaves are drooping"]
+    ],
+    pest: [
+        ["leaves have holes", "Leaves have holes"],
+        ["insects on leaves", "Insects on leaves"]
+    ],
+    plant: [
+        ["plant growth is slow", "Plant growth is slow"],
+        ["stem is weak", "Stem is weak"],
+        ["plant looks weak", "Plant looks weak"]
+    ],
+    fruit: [
+        ["roots are rotting", "Roots are rotting"],
+        ["fruit has black spots", "Fruit has black spots"],
+        ["fruit is rotting", "Fruit is rotting"]
+    ]
+};
+
+function showSymptomsByType() {
+    const type = document.getElementById("symptomType").value;
+    const container = document.getElementById("symptomOptions");
+
+    if (!type) {
+        container.innerHTML = '<div class="symptom-placeholder">Select a symptom type above to view symptoms.</div>';
+        return;
+    }
+
+    container.innerHTML = symptomGroups[type].map((item, index) => {
+        const symptom = item[0];
+        const label = item[1];
+        const selected = selectedSymptoms.has(symptom) ? " selected" : "";
+        return `
+            <button type="button" class="symptom-option${selected}" data-symptom="${symptom}" onclick="toggleSymptom(this)">
+                <span class="symptom-number">${index + 1}</span>
+                <span class="symptom-text">${label}</span>
+                <span class="check-mark">✓</span>
+            </button>`;
+    }).join('');
+}
+
+function toggleSymptom(card) {
+    const symptom = card.dataset.symptom;
+
+    if (selectedSymptoms.has(symptom)) {
+        selectedSymptoms.delete(symptom);
+        card.classList.remove("selected");
+    } else {
+        selectedSymptoms.add(symptom);
+        card.classList.add("selected");
+    }
+
+    updateSelectedSymptoms();
+}
+
+function updateSelectedSymptoms() {
+    const list = Array.from(selectedSymptoms);
+    const display = document.getElementById("selectedSymptoms");
+    const hiddenInput = document.getElementById("symptoms");
+
+    if (list.length === 0) {
+        display.textContent = "No symptoms selected";
+        hiddenInput.value = "";
+    } else {
+        display.textContent = "Selected: " + list.join(", ");
+        hiddenInput.value = list.join(", ");
+    }
+}
+
+
+/* ================= SEMANTIC VOICE + MULTI-SERVER AGRIAI ENGINE =================
+   Pipeline:
+   1) Speech recognition captures what the farmer actually says.
+   2) Intent extraction converts free-form language into agricultural concepts.
+   3) Local crop-disease knowledge scores combinations of concepts.
+   4) Optional independent AI endpoints can review the same evidence in parallel.
+   5) Results are merged; the UI never claims a lab-confirmed diagnosis.
+
+   IMPORTANT: Browser JavaScript cannot safely contain private API keys. Add your
+   own backend/server URLs to AGRI_AI_SERVERS. The local semantic engine remains
+   available when those servers are unavailable.
+*/
+
+const AGRI_AI_SERVERS = window.AGRI_AI_SERVERS || [
+    // Example: {name:"Primary AI", url:"/api/analyze-crop", timeout:8000},
+    // Example: {name:"Verifier AI", url:"/api/verify-crop", timeout:8000}
+];
+
+/* Translation layer: speech is translated to English BEFORE semantic disease analysis.
+   For production, point these at your own backend translation services. The public
+   endpoints below are demo fallbacks and should not be treated as guaranteed SLAs. */
+const AGRI_TRANSLATION_SERVERS = window.AGRI_TRANSLATION_SERVERS || [
+    {name:"Google Translate demo", type:"google", timeout:7000},
+    {name:"MyMemory Translate demo", type:"mymemory", timeout:7000}
+];
+
+const AGRI_SERVER_TIMEOUT = 9000;
+const AGRI_TRANSLATION_TIMEOUT = 7000;
+let lastEnglishTranslation = "";
+
+function setEnglishTranslation(text){
+    const box=document.getElementById("englishTranscript");
+    if(box)box.value=text||"";
+}
+
+async function translateWithServer(server,text){
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),server.timeout||AGRI_TRANSLATION_TIMEOUT);
+    try{
+        let response,data,translated="";
+        if(server.type==="google"){
+            const url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q="+encodeURIComponent(text);
+            response=await fetch(url,{signal:controller.signal});
+            if(!response.ok)throw new Error("HTTP "+response.status);
+            data=await response.json();
+            translated=(data?.[0]||[]).map(x=>x?.[0]||"").join("").trim();
+        }else if(server.type==="mymemory"){
+            const url="https://api.mymemory.translated.net/get?q="+encodeURIComponent(text)+"&langpair=autodetect|en";
+            response=await fetch(url,{signal:controller.signal});
+            if(!response.ok)throw new Error("HTTP "+response.status);
+            data=await response.json();
+            translated=String(data?.responseData?.translatedText||"").trim();
+        }else if(server.url){
+            response=await fetch(server.url,{method:"POST",headers:{"Content-Type":"application/json",...(server.headers||{})},body:JSON.stringify({text,targetLanguage:"en",sourceLanguage:"auto"}),signal:controller.signal});
+            if(!response.ok)throw new Error("HTTP "+response.status);
+            data=await response.json();
+            translated=String(data?.translation||data?.translatedText||data?.text||"").trim();
+        }
+        if(!translated)throw new Error("Empty translation");
+        return {text:translated,server:server.name||server.url};
+    }finally{clearTimeout(timer);}
+}
+
+async function translateSpeechToEnglish(text){
+    const raw=String(text||"").trim();
+    if(!raw)return {text:"",server:""};
+    const lang=document.getElementById("voiceLanguage")?.value||"en-IN";
+    if(lang.toLowerCase().startsWith("en")){
+        setEnglishTranslation(raw);
+        lastEnglishTranslation=raw;
+        return {text:raw,server:"Browser — English input"};
+    }
+    setEnglishTranslation("Translating to English...");
+    setVoiceStatus("Translating your spoken description into English so the AI can understand it...");
+    const attempts=await Promise.allSettled(AGRI_TRANSLATION_SERVERS.map(s=>translateWithServer(s,raw)));
+    const good=attempts.filter(x=>x.status==="fulfilled"&&x.value?.text).map(x=>x.value);
+    if(!good.length){
+        setEnglishTranslation("Translation server unavailable. The original speech will still be analyzed where possible.");
+        lastEnglishTranslation="";
+        return {text:raw,server:"Translation unavailable"};
+    }
+    // Prefer the first successful translation; keep all successful servers as evidence.
+    const chosen=good[0];
+    lastEnglishTranslation=chosen.text;
+    setEnglishTranslation(chosen.text);
+    return {text:chosen.text,server:good.map(x=>x.server).join(", ")};
+}
+let lastVoiceAlternatives = [];
+let lastIntent = null;
+
+function setVoiceStatus(message){
+    const status=document.getElementById("voiceStatus");
+    if(status) status.textContent=message;
+}
+function getSpeechRecognition(){return window.SpeechRecognition||window.webkitSpeechRecognition||null;}
+function normalizeSpeech(text){
+    return String(text||"").toLowerCase()
+      .normalize("NFKC")
+      .replace(/[.,!?;:()[\]{}'"“”‘’]/g," ")
+      .replace(/\s+/g," ").trim();
+}
+function compact(text){return normalizeSpeech(text).replace(/\s/g,"");}
+function hasAny(text, arr){const t=normalizeSpeech(text);return arr.some(x=>t.includes(normalizeSpeech(x)));}
+function scorePhrase(text, phrases){
+    const t=normalizeSpeech(text); let n=0;
+    phrases.forEach(p=>{if(t.includes(normalizeSpeech(p))) n++;});
+    return n;
+}
+
+/* -------- Free-form semantic concept dictionary -------- */
+const SEMANTIC_CONCEPTS={
+  yellow:{patterns:["yellow","turning yellow","pale","paling","chlorosis","పసుపు","पीला","மஞ்சள்","ಹಳದಿ"],label:"yellowing/pale leaves"},
+  brown:{patterns:["brown","reddish brown","rust brown","బ్రౌన్","గోధుమ","பழுப்பு","ಕಂದು"],label:"brown discoloration"},
+  black:{patterns:["black","dark black","blackish","నలుపు","काला","கருப்பு","ಕಪ್ಪು"],label:"dark/black lesions"},
+  white:{patterns:["white","powder","dust","coating","fuzzy","తెల్ల","सफेद","வெள்ளை","ಬಿಳಿ"],label:"white coating/spots"},
+  spots:{patterns:["spot","spots","patch","patches","marks","lesion","stain","మచ్చ","धब्बे","புள்ளி","ಚುಕ್ಕೆ"],label:"spots/lesions"},
+  holes:{patterns:["hole","holes","eaten","chewed","bite","bitten","గొట్టాలు","छेद","துளை","ರಂಧ್ರ"],label:"holes/chewed tissue"},
+  wilt:{patterns:["wilt","wilting","droop","drooping","hang","hanging","లేవడం లేదు","ముడుచు","मुरझा","வாட","ಬಾಡ"],label:"wilting/drooping"},
+  dry:{patterns:["dry","drying","dried","burnt","burning","scorched","crispy","ఎండిపో","सूख","உலர்","ಒಣ"],label:"drying/burning"},
+  curl:{patterns:["curl","curling","curled","twisted","rolled","leaf curl","ముడుచు","मुड़","சுருள்","ಸುರುಳಿ"],label:"leaf curling/distortion"},
+  rot:{patterns:["rot","rotting","rotten","decay","soft fruit","bad smell","కుళ్ళు","सड़","அழுக","ಕೊಳೆ"],label:"rotting/decay"},
+  insect:{patterns:["insect","insects","bug","bugs","pest","aphid","whitefly","thrips","caterpillar","worm","పురుగు","कीड़े","பூச்சி","ಹುಳು"],label:"insect/pest activity"},
+  sticky:{patterns:["sticky","honeydew","sweet liquid","చిక్కగా","चिपचिपा","ஒட்டும்","ಜಿಗುಟು"],label:"sticky/honeydew residue"},
+  powder:{patterns:["powder","powdery","dusty","white powder","పొడి","पाउडर","தூள்","ಪುಡಿ"],label:"powdery growth"},
+  waterSoaked:{patterns:["water soaked","water-soaked","wet looking","greasy","నీటితో తడిసిన","गीला धब्बा","நீர் ஊறிய","ನೀರಿನ ಕಲೆ"],label:"water-soaked/greasy lesions"},
+  sunken:{patterns:["sunken","depressed","deep spot","లోపలికి","धंसा","உள்ளிழைந்த","ಒಳಗೆ ಕುಳಿತ"],label:"sunken lesions"},
+  ring:{patterns:["ring","rings","concentric","target","bullseye","వలయం","छल्ला","வட்ட வளையம்","ವಲಯ"],label:"ring/target pattern"},
+  whitefly:{patterns:["whitefly","white fly","small white flies","తెల్ల ఈగ","सफेद मक्खी","வெள்ளை ஈ","ಬಿಳಿ ಈಗೆ"],label:"whitefly activity"},
+  frass:{patterns:["frass","sawdust","insect waste","larva waste","పురుగు మలం","कीड़े का मल"],label:"insect frass/waste"},
+  rapid:{patterns:["rapidly","quickly","overnight","spreading fast","suddenly","వేగంగా","तेजी से","வேகமாக","ವೇಗವಾಗಿ"],label:"rapid spread"},
+  slowGrowth:{patterns:["slow growth","not growing","stunted","small plant","short plant","పెరుగుదల లేదు","विकास धीमा","வளர்ச்சி குறைவு","ಬೆಳವಣಿಗೆ ನಿಧಾನ"],label:"stunted/slow growth"},
+  root:{patterns:["root","roots","root rot","root damage","వేరు","जड़","வேர்","ಬೇರು"],label:"root involvement"},
+  fruit:{patterns:["fruit","tomato fruit","chilli fruit","pod","కాయ","फल","பழம்","ಹಣ್ಣು"],label:"fruit/pod involvement"},
+  leaf:{patterns:["leaf","leaves","leaf edge","leaf tip","ఆకు","पत्ता","இலை","ಎಲೆ"],label:"leaf involvement"},
+  stem:{patterns:["stem","stalk","trunk","కాండం","तना","தண்டு","ಕಾಂಡ"],label:"stem involvement"},
+  lowerLeaves:{patterns:["lower leaves","old leaves","bottom leaves","older leaves","క్రింది ఆకులు","नीचे की पत्तियां","கீழ் இலைகள்","ಕೆಳಗಿನ ಎಲೆಗಳು"],label:"older/lower leaves affected"},
+  youngLeaves:{patterns:["young leaves","new leaves","top leaves","new growth","కొత్త ఆకులు","नई पत्तियां","புதிய இலை","ಹೊಸ ಎಲೆ"],label:"young/new growth affected"}
+};
+
+function extractSemanticIntent(text){
+    const raw=String(text||"");
+    const t=normalizeSpeech(raw);
+    const concepts=[];
+    const evidence=[];
+    Object.entries(SEMANTIC_CONCEPTS).forEach(([key,c])=>{
+        const hits=c.patterns.filter(p=>t.includes(normalizeSpeech(p)));
+        if(hits.length){concepts.push(key);evidence.push(c.label);}
+    });
+
+    // Intent is broader than the predefined symptom buttons.
+    const intents=[];
+    if(hasAny(t,["what is wrong","what happened","problem","disease","sick","not healthy","something wrong","ఏమైంది","समस्या","பிரச்சனை","ಸಮಸ್ಯೆ"])) intents.push("farmer is asking for problem/disease identification");
+    if(concepts.some(x=>["spots","brown","black","white","powder","waterSoaked","sunken","ring"].includes(x))) intents.push("visible lesion/discoloration complaint");
+    if(concepts.some(x=>["insect","whitefly","frass","holes","sticky"].includes(x))) intents.push("possible pest/insect complaint");
+    if(concepts.some(x=>["wilt","dry","yellow","curl","slowGrowth"].includes(x))) intents.push("plant health/growth stress complaint");
+    if(concepts.some(x=>["rot","root","fruit"].includes(x))) intents.push("fruit/root decay complaint");
+
+    const plantParts=[];
+    ["leaf","youngLeaves","lowerLeaves","fruit","root","stem"].forEach(k=>{if(concepts.includes(k))plantParts.push(SEMANTIC_CONCEPTS[k].label);});
+    const colors=[];
+    ["yellow","brown","black","white"].forEach(k=>{if(concepts.includes(k))colors.push(SEMANTIC_CONCEPTS[k].label);});
+    const patterns=[];
+    ["ring","waterSoaked","sunken","powder","holes","curl"].forEach(k=>{if(concepts.includes(k))patterns.push(SEMANTIC_CONCEPTS[k].label);});
+
+    return {raw,normalized:t,concepts:[...new Set(concepts)],evidence:[...new Set(evidence)],intents:[...new Set(intents)],plantParts,colors,patterns,
+      understood:concepts.length>0, ambiguity:concepts.length<2?"low evidence":"multi-clue evidence"};
+}
+
+/* Existing button symptoms are still used, but voice no longer depends on them. */
+const VOICE_SYMPTOM_RULES=[
+ {key:"leaves are wilting",patterns:["wilting","wilt","leaves are wilting","plant is wilting","వాడిపోతుంది","मुरझा","வாடுகிறது","ಬಾಡುತ್ತಿದೆ"]},
+ {key:"leaves are turning yellow",patterns:["turning yellow","yellow leaves","leaves are yellow","yellowing","పసుపు ఆకులు","पीली पत्तियां","மஞ்சள் இலை","ಹಳದಿ ಎಲೆ"]},
+ {key:"white powder on leaves",patterns:["white powder","powder on leaves","powdery","white dust","తెల్ల పొడి","सफेद पाउडर","வெள்ளை தூள்","ಬಿಳಿ ಪುಡಿ"]},
+ {key:"leaves are drying",patterns:["leaves are drying","leaf is drying","dry leaves","leaves dried","drying","ఆకులు ఎండిపోతున్నాయి","पत्तियां सूख रही","இலைகள் உலர","ಎಲೆಗಳು ಒಣ"]},
+ {key:"leaves are falling",patterns:["leaves are falling","leaf falling","leaves falling","leaf drop","ఆకులు రాలుతున్నాయి","पत्तियां गिर रही","இலைகள் உதிர","ಎಲೆಗಳು ಬೀಳ"]},
+ {key:"leaves have black patches",patterns:["black patches","black patch on leaves","black marks on leaves","నల్ల మచ్చలు","काले धब्बे","கருப்பு புள்ளிகள்","ಕಪ್ಪು ಚುಕ್ಕೆ"]},
+ {key:"leaves have white spots",patterns:["white spots","white spot on leaves","white marks on leaves","తెల్ల మచ్చలు","सफेद धब्बे","வெள்ளை புள்ளி","ಬಿಳಿ ಚುಕ್ಕೆ"]},
+ {key:"leaf edges are burning",patterns:["burning edges","leaf edges burning","edges are burning","ఆకు అంచులు కాలుతున్నాయి","पत्तियों के किनारे जल रहे","இலை ஓரம் எரிகிறது","ಎಲೆ ಅಂಚು ಸುಡುತ್ತಿದೆ"]},
+ {key:"leaves are drooping",patterns:["drooping","droopy leaves","leaves are drooping","ఆకులు వాలుతున్నాయి","पत्तियां झुक रही","இலைகள் தொங்க","ಎಲೆಗಳು ಬಾಗ"]},
+ {key:"leaves have holes",patterns:["holes in leaves","holes on leaves","leaves have holes","leaf has holes","ఆకుల్లో రంధ్రాలు","पत्तियों में छेद","இலையில் துளை","ಎಲೆಯಲ್ಲಿ ರಂಧ್ರ"]},
+ {key:"insects on leaves",patterns:["insects","bugs on leaves","insects on leaves","pests on leaves","small insects","పురుగులు","कीड़े","பூச்சிகள்","ಹುಳುಗಳು"]},
+ {key:"plant growth is slow",patterns:["growth is slow","growing slowly","not growing","slow growth","plant is small","పెరుగుదల లేదు","विकास धीमा","வளர்ச்சி மெதுவாக","ಬೆಳವಣಿಗೆ ನಿಧಾನ"]},
+ {key:"stem is weak",patterns:["weak stem","stem is weak","stem bending","stem is bending","కాండం బలహీనంగా","कमजोर तना","தண்டு பலவீனம்","ಕಾಂಡ ದುರ್ಬಲ"]},
+ {key:"plant looks weak",patterns:["plant looks weak","plant is weak","weak plant","మొక్క బలహీనంగా","कमजोर पौधा","செடி பலவீனமாக","ಸಸ್ಯ ದುರ್ಬಲ"]},
+ {key:"roots are rotting",patterns:["roots are rotting","root rot","roots are rotten","rotten roots","వేర్లు కుళ్ళాయి","जड़ सड़ रही","வேர் அழுகல்","ಬೇರು ಕೊಳೆ"]},
+ {key:"fruit has black spots",patterns:["black spots on fruit","fruit has black spots","black spots in fruit","కాయపై నల్ల మచ్చలు","फल पर काले धब्बे","பழத்தில் கருப்பு புள்ளி","ಹಣ್ಣಿನಲ್ಲಿ ಕಪ್ಪು ಚುಕ್ಕೆ"]},
+ {key:"fruit is rotting",patterns:["fruit is rotting","rotten fruit","fruit rot","fruit is rotten","కాయ కుళ్ళుతోంది","फल सड़ रहा","பழம் அழுகுகிறது","ಹಣ್ಣು ಕೊಳೆಯುತ್ತಿದೆ"]}
+];
+function extractSymptomsFromSpeech(spokenText){
+    const text=normalizeSpeech(spokenText),found=[];
+    VOICE_SYMPTOM_RULES.forEach(r=>{if(r.patterns.some(p=>text.includes(normalizeSpeech(p))))found.push(r.key);});
+    found.forEach(x=>selectedSymptoms.add(x));
+    updateSelectedSymptoms();
+    const type=inferSymptomType(found);
+    if(type){document.getElementById("symptomType").value=type;showSymptomsByType();}
+    return found;
+}
+function inferSymptomType(found){
+    if(found.some(s=>/leaves|leaf/.test(s)))return "leaf";
+    if(found.some(s=>/insects|holes/.test(s)))return "pest";
+    if(found.some(s=>/plant|stem/.test(s)))return "plant";
+    if(found.some(s=>/root|fruit/.test(s)))return "fruit";
+    return "";
+}
+
+/* -------- Disease profiles are semantic, not button-dependent -------- */
+const DISEASE_PROFILES={
+ Tomato:[
+  {name:"Early Blight",category:"Fungal disease",base:50,need:["spots"],boost:["brown","ring","lowerLeaves","dry","leaf"],clues:["concentric","target","bullseye","brown rings","older leaves","lower leaves","alternaria"],advice:"Inspect older/lower leaves for target-like brown lesions; improve airflow and follow locally approved tomato disease management."},
+  {name:"Late Blight",category:"Oomycete disease",base:47,need:["spots"],boost:["black","waterSoaked","rapid","dry","fruit"],clues:["water soaked","water-soaked","rapidly spreading","dark irregular","white fuzzy","phytophthora"],advice:"Check for rapidly expanding water-soaked lesions and fruit involvement; reduce leaf wetness and seek local crop-specific guidance."},
+  {name:"Powdery Mildew",category:"Fungal disease",base:52,need:["white"],boost:["powder","leaf","dry"],clues:["white powder","powdery coating","mildew"],advice:"Check for a true powdery coating and improve airflow; use locally approved management if confirmed."},
+  {name:"Bacterial Spot",category:"Bacterial disease",base:44,need:["spots"],boost:["black","waterSoaked","fruit","holes"],clues:["small spots","greasy","water soaked","shot hole","bacterial spot"],advice:"Inspect for small dark/greasy spots and fruit lesions; avoid spreading wet plant material and seek local bacterial-disease guidance."},
+  {name:"Tomato Leaf Curl Virus",category:"Viral disease",base:48,need:["curl"],boost:["yellow","slowGrowth","youngLeaves","whitefly","insect"],clues:["leaf curl","whitefly","stunted","small leaves"],advice:"Inspect young growth and the undersides of leaves for whiteflies; follow local integrated vector management."},
+  {name:"Fusarium Wilt",category:"Fungal wilt disease",base:43,need:["wilt"],boost:["yellow","lowerLeaves","stem","slowGrowth","dry"],clues:["one side","vascular","brown inside stem","persistent wilt","fusarium"],advice:"Check whether wilt persists despite adequate soil moisture and inspect the stem/vascular tissue; use local wilt-management guidance."}
+ ],
+ Rice:[
+  {name:"Rice Blast",category:"Fungal disease",base:52,need:["spots"],boost:["ring","brown","dry","leaf","slowGrowth"],clues:["spindle","diamond shaped","gray center","brown margin","blast"],advice:"Look for spindle/diamond-shaped lesions with gray centers; avoid excessive nitrogen and follow local blast guidance."},
+  {name:"Bacterial Leaf Blight",category:"Bacterial disease",base:49,need:["dry"],boost:["yellow","leaf","rapid","waterSoaked"],clues:["yellow streak","leaf tip drying","water soaked margin","bacterial leaf blight"],advice:"Check whether yellow-white streaking starts near leaf tips/edges; follow local bacterial-blight management."},
+  {name:"Brown Spot",category:"Fungal disease",base:48,need:["spots"],boost:["brown","yellow","dry","slowGrowth"],clues:["oval brown","brown lesions","grain discoloration","brown spot"],advice:"Inspect for oval brown lesions and crop nutrition; maintain balanced nutrition and follow local guidance."},
+  {name:"Sheath Blight",category:"Fungal disease",base:48,need:["stem"],boost:["waterSoaked","rapid","dry"],clues:["sheath","water line","gray green lesion","sheath blight"],advice:"Inspect leaf sheaths near the water line for irregular gray-green lesions and follow local sheath-blight guidance."}
+ ],
+ Cotton:[
+  {name:"Cotton Leaf Curl Virus",category:"Viral disease",base:51,need:["curl"],boost:["yellow","youngLeaves","slowGrowth","whitefly","insect"],clues:["vein thickening","vein swelling","enation","whitefly","cotton leaf curl"],advice:"Inspect for leaf curl, vein thickening and whiteflies; use integrated vector management according to local recommendations."},
+  {name:"Bacterial Blight / Angular Leaf Spot",category:"Bacterial disease",base:46,need:["spots"],boost:["angular","waterSoaked","black","leaf"],clues:["angular spots","vein blackening","black arm","water soaked","bacterial blight"],advice:"Check for angular water-soaked lesions and vein darkening; follow local cotton bacterial-blight guidance."},
+  {name:"Aphid / Whitefly Damage",category:"Insect damage",base:49,need:["insect"],boost:["whitefly","sticky","yellow","curl"],clues:["aphids","whitefly","honeydew","sooty mold","small insects"],advice:"Inspect leaf undersides for sap-sucking insects and use integrated pest management rather than treating from voice alone."}
+ ],
+ Chilli:[
+  {name:"Chilli Leaf Curl Virus",category:"Viral disease",base:50,need:["curl"],boost:["yellow","slowGrowth","youngLeaves","whitefly","insect"],clues:["leaf curl","twisted","stunted","whitefly"],advice:"Inspect young growth for curl/distortion and vector insects; follow local integrated vector management."},
+  {name:"Anthracnose / Fruit Rot",category:"Fungal disease",base:56,need:["fruit"],boost:["rot","sunken","black","ring","rapid"],clues:["sunken","dark sunken","concentric","fruit rot","anthracnose"],advice:"Inspect fruit for dark sunken lesions; remove badly affected fruit where appropriate and follow local anthracnose guidance."},
+  {name:"Powdery Mildew",category:"Fungal disease",base:52,need:["white"],boost:["powder","leaf","dry"],clues:["white coating","powdery","mildew"],advice:"Confirm a powdery coating, improve airflow and follow locally approved management."},
+  {name:"Thrips Damage",category:"Insect damage",base:48,need:["insect"],boost:["youngLeaves","curl","spots","yellow"],clues:["thrips","silvery","silver streak","scarring","tiny insects"],advice:"Inspect young leaves and flowers for thrips and use integrated pest management."}
+ ],
+ Maize:[
+  {name:"Fall Armyworm Damage",category:"Insect damage",base:55,need:["insect"],boost:["holes","frass","youngLeaves","leaf","rapid"],clues:["fall armyworm","armyworm","frass","sawdust","window pane","whorl","caterpillar"],advice:"Inspect the maize whorl for larvae/frass and follow integrated fall-armyworm management."},
+  {name:"Northern Leaf Blight",category:"Fungal disease",base:50,need:["spots"],boost:["brown","dry","leaf","rapid"],clues:["cigar shaped","long gray","long lesions","northern leaf blight"],advice:"Check for long cigar-shaped gray-green lesions and follow local leaf-blight guidance."},
+  {name:"Common Rust",category:"Fungal disease",base:50,need:["spots"],boost:["brown","dry","leaf"],clues:["rust pustules","orange brown","powdery pustules","common rust"],advice:"Inspect for orange/brown rust pustules and follow local rust-management guidance."},
+  {name:"Downy Mildew",category:"Oomycete disease",base:47,need:["yellow"],boost:["white","leaf","slowGrowth","rapid"],clues:["downy","striping","white downy growth","downy mildew"],advice:"Inspect leaves for characteristic striping/downy growth and seek local disease-management guidance."}
+ ]
+};
+
+function scoreProfile(profile,intent,temperature,humidity,soil){
+    const c=new Set(intent.concepts); let score=profile.base;
+    const matched=[];
+    (profile.need||[]).forEach(k=>{if(c.has(k)){score+=14;matched.push(k);}});
+    (profile.boost||[]).forEach(k=>{if(c.has(k)){score+=8;matched.push(k);}});
+    const text=intent.normalized;
+    const clueHits=(profile.clues||[]).filter(x=>text.includes(normalizeSpeech(x)));
+    score+=clueHits.length*10;
+    matched.push(...clueHits.map(x=>"phrase:"+x));
+    if(humidity>82 && /fungal|oomycete/i.test(profile.category))score+=7;
+    if(temperature>35 && /wilt|stress/i.test(profile.name))score+=6;
+    if(soil<25 && /wilt/i.test(profile.name))score+=7;
+    if(c.has("insect") && /viral/i.test(profile.category))score+=4;
+    return {score:Math.min(97,Math.max(0,score)),matched:[...new Set(matched)]};
+}
+
+function semanticStress(intent,temperature,humidity,soil){
+    const out=[]; const c=new Set(intent.concepts);
+    if(soil<25 && (c.has("wilt")||c.has("dry")||c.has("yellow")))out.push({name:"Severe Water Stress",category:"Environmental stress",confidence:84,why:"Wilting/drying/yellowing is supported by very low soil moisture.",advice:"Verify the soil reading and restore appropriate moisture before assuming a disease."});
+    if(temperature>35 && (c.has("wilt")||c.has("dry")||c.has("burning")))out.push({name:"Heat Stress",category:"Environmental stress",confidence:82,why:"High temperature plus wilting/drying can indicate heat stress.",advice:"Check irrigation and heat exposure before applying disease treatment."});
+    return out;
+}
+
+function buildAnalysisPayload(englishSpeech=""){
+    const crop=document.getElementById("crop").value;
+    const temperature=Number(document.getElementById("temperature").value);
+    const humidity=Number(document.getElementById("humidity").value);
+    const soil=Number(document.getElementById("soil").value);
+    const speech=document.getElementById("voiceTranscript").value.trim();
+    const selected=Array.from(selectedSymptoms);
+    const english=String(englishSpeech||lastEnglishTranslation||document.getElementById("englishTranscript")?.value||"").trim();
+    return {crop,temperature,humidity,soil,spokenProblem:speech,englishProblem:english,selectedSymptoms:selected,language:document.getElementById("voiceLanguage").value,timestamp:new Date().toISOString()};
+}
+
+/* -------- Optional multi-server AI review --------
+   Every server receives the same evidence. A server should return JSON like:
+   {disease,confidence,category,reason,alternative,interpretedIntent,clues}
+   Do not put API keys in this HTML. Authenticate in your backend. */
+async function callAIAnalysisServer(server,payload){
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),server.timeout||AGRI_SERVER_TIMEOUT);
+    try{
+      const response=await fetch(server.url,{method:"POST",headers:{"Content-Type":"application/json",...(server.headers||{})},body:JSON.stringify(payload),signal:controller.signal});
+      if(!response.ok)throw new Error("HTTP "+response.status);
+      const data=await response.json();
+      return {...data,server:server.name||server.url};
+    }finally{clearTimeout(timer);}
+}
+async function queryIndependentServers(payload){
+    if(!AGRI_AI_SERVERS.length)return [];
+    const results=await Promise.allSettled(AGRI_AI_SERVERS.map(s=>callAIAnalysisServer(s,payload)));
+    return results.filter(x=>x.status==="fulfilled"&&x.value).map(x=>x.value);
+}
+function mergeServerResults(results,localTop){
+    if(!results.length)return localTop;
+    const valid=results.filter(r=>r.disease||r.interpretedIntent||r.reason);
+    if(!valid.length)return localTop;
+    const names=valid.map(r=>r.disease).filter(Boolean);
+    const same=names.length?names.sort((a,b)=>names.filter(x=>x===b).length-names.filter(x=>x===a).length)[0]:localTop?.name;
+    const matching=valid.filter(r=>r.disease===same);
+    const avg=matching.length?Math.round(matching.reduce((a,r)=>a+(Number(r.confidence)||0),0)/matching.length):0;
+    const best=matching[0]||valid[0];
+    return {...localTop,name:same||localTop.name,confidence:Math.min(96,Math.max(localTop.confidence||0,avg||0)),category:best.category||localTop.category,why:best.reason||localTop.why,serverConsensus:matching.length+" independent AI review(s)",interpretedIntent:best.interpretedIntent||"",serverClues:best.clues||[]};
+}
+
+function renderInterpretation(intent,top,serverResults){
+    const el=document.getElementById("intentInterpretation");
+    const clues=document.getElementById("intentClues");
+    if(!el||!clues)return;
+    const intentText=intent.intents.length?intent.intents.join("; "):"general crop-health concern";
+    const parts=[];
+    if(intent.plantParts.length)parts.push("Affected: "+intent.plantParts.join(", "));
+    if(intent.colors.length)parts.push("Appearance: "+intent.colors.join(", "));
+    if(intent.patterns.length)parts.push("Pattern: "+intent.patterns.join(", "));
+    el.textContent="Intent understood as: "+intentText+"."+(top?.interpretedIntent?" AI review interpreted it as: "+top.interpretedIntent+".":"");
+    clues.textContent=parts.length?parts.join(" • ")+(serverResults.length?" • "+serverResults.length+" independent server review(s) received.":""):"The spoken description did not use a predefined symptom phrase, but its meaning was still analyzed from context.";
+}
+
+
+/* ================= FINAL DIAGNOSIS VOICE RESPONSE =================
+   The AI reasons in English, then translates the final diagnosis/risk
+   statement into the language selected by the farmer and speaks it.
+   A replay button is also provided if automatic speech is blocked. */
+
+let lastDiagnosisSpeechEnglish = "";
+let lastDiagnosisSpeechLocalized = "";
+let resultSpeechToken = 0;
+let resultVoiceMuted = false;
+
+const RESULT_LANGUAGE_CODES = {
+    "en-IN":"en",
+    "te-IN":"te",
+    "hi-IN":"hi",
+    "ta-IN":"ta",
+    "kn-IN":"kn",
+    "ml-IN":"ml",
+    "mr-IN":"mr",
+    "bn-IN":"bn"
+};
+
+function getSelectedVoiceLanguage(){
+    return document.getElementById("voiceLanguage")?.value || "en-IN";
+}
+
+function getTranslationTargetCode(){
+    return RESULT_LANGUAGE_CODES[getSelectedVoiceLanguage()] || "en";
+}
+
+function setResultVoiceStatus(message){
+    const el=document.getElementById("resultVoiceStatus");
+    if(el)el.textContent=message;
+}
+
+function setHearResultEnabled(enabled){
+    const btn=document.getElementById("hearResultButton");
+    if(btn)btn.disabled=!enabled;
+    const muteBtn=document.getElementById("muteResultButton");
+    if(muteBtn)muteBtn.disabled=!enabled;
+}
+
+function updateResultMuteButton(){
+    const btn=document.getElementById("muteResultButton");
+    if(!btn)return;
+    btn.classList.toggle("muted",resultVoiceMuted);
+    btn.textContent=resultVoiceMuted ? "🔇 Unmute Voice" : "🔊 Mute Voice";
+    btn.setAttribute("aria-label",resultVoiceMuted ? "Unmute diagnosis voice" : "Mute diagnosis voice");
+}
+
+function toggleResultVoiceMute(){
+    if(!("speechSynthesis" in window))return;
+    if(window.speechSynthesis.speaking){
+        if(!resultVoiceMuted){
+            window.speechSynthesis.pause();
+            resultVoiceMuted=true;
+            setResultVoiceStatus("🔇 Voice muted. Click “Unmute Voice” to continue listening.");
+        }else{
+            window.speechSynthesis.resume();
+            resultVoiceMuted=false;
+            setResultVoiceStatus("🔊 Voice resumed.");
+        }
+        updateResultMuteButton();
+    }else if(resultVoiceMuted){
+        resultVoiceMuted=false;
+        updateResultMuteButton();
+    }
+}
+
+function stopDiagnosisSpeech(){
+    if("speechSynthesis" in window){
+        window.speechSynthesis.cancel();
+    }
+    resultVoiceMuted=false;
+    updateResultMuteButton();
+    const btn=document.getElementById("hearResultButton");
+    if(btn)btn.classList.remove("speaking");
+}
+
+async function translateFinalDiagnosis(text,targetCode){
+    if(!text) return "";
+    if(!targetCode || targetCode === "en") return text;
+    const source = String(text).trim();
+    const attempts = [
+      async () => {
+        const url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=" + encodeURIComponent(targetCode) + "&dt=t&q=" + encodeURIComponent(source);
+        const response = await fetch(url, {mode:"cors", cache:"no-store"});
+        if(!response.ok) throw new Error("Google translation HTTP " + response.status);
+        const data = await response.json();
+        const value = (data?.[0] || []).map(row => row?.[0] || "").join("").trim();
+        if(!value || value.toLowerCase() === source.toLowerCase()) throw new Error("Google returned no translated text");
+        return value;
+      },
+      async () => {
+        const url = "https://api.mymemory.translated.net/get?q=" + encodeURIComponent(source) + "&langpair=en%7C" + encodeURIComponent(targetCode);
+        const response = await fetch(url, {mode:"cors", cache:"no-store"});
+        if(!response.ok) throw new Error("MyMemory translation HTTP " + response.status);
+        const data = await response.json();
+        const value = String(data?.responseData?.translatedText || "").trim();
+        if(!value || value.toLowerCase() === source.toLowerCase()) throw new Error("MyMemory returned no translated text");
+        return value;
+      }
+    ];
+    let lastError;
+    for(const attempt of attempts){
+      try { return await attempt(); } catch(error) { lastError = error; console.warn("Translation provider failed:", error); }
+    }
+    throw lastError || new Error("No translation provider responded");
+}
+
+function speakText(text,language){
+    return new Promise((resolve,reject)=>{
+        if(!("speechSynthesis" in window)){
+            reject(new Error("Speech synthesis is not supported by this browser."));
+            return;
+        }
+        stopDiagnosisSpeech();
+
+        const utterance=new SpeechSynthesisUtterance(text);
+        utterance.lang=language;
+        utterance.rate=0.92;
+        utterance.pitch=1;
+        utterance.volume=1;
+
+        const voices=window.speechSynthesis.getVoices();
+        const languageBase=language.split("-")[0].toLowerCase();
+        const matching=voices.filter(v=>v.lang?.toLowerCase()===language.toLowerCase());
+        const baseMatching=voices.filter(v=>v.lang?.toLowerCase().startsWith(languageBase));
+
+        /* FORCE MALE-PREFERRED OUTPUT.
+           Browser speech synthesis does not expose a gender property, so we
+           identify the known male voice names supplied by common OS/browser
+           voice packs. Female voices are explicitly excluded from fallback. */
+        const maleVoiceNames={
+            "en":"ravi|aarav|arjun|prabhat|kunal|rehaan|male|madhur|david|mark|george|james|daniel",
+            "te":"mohan|male",
+            "hi":"aarav|arjun|kunal|rehaan|madhur|dhruv|male",
+            "ta":"valluvar|kumar|surya|anbu|male",
+            "kn":"gagan|male",
+            "ml":"midhun|male",
+            "mr":"manohar|male",
+            "bn":"bashkar|pradeep|male"
+        };
+        const femaleVoicePattern=/(female|woman|women|girl|zira|samantha|susan|karen|heera|veena|lekha|shruti|ananya|aarti|kavya|neerja|aashi|tanishaa|sapna|aarohi)/i;
+        const malePattern=new RegExp(maleVoiceNames[languageBase]||"male","i");
+        const maleExact=matching.find(v=>malePattern.test(v.name||"")&&!femaleVoicePattern.test(v.name||""));
+        const maleBase=baseMatching.find(v=>malePattern.test(v.name||"")&&!femaleVoicePattern.test(v.name||""));
+        const nonFemaleExact=matching.find(v=>!femaleVoicePattern.test(v.name||""));
+        const nonFemaleBase=baseMatching.find(v=>!femaleVoicePattern.test(v.name||""));
+
+        if(maleExact)utterance.voice=maleExact;
+        else if(maleBase)utterance.voice=maleBase;
+        else if(nonFemaleExact)utterance.voice=nonFemaleExact;
+        else if(nonFemaleBase)utterance.voice=nonFemaleBase;
+
+        /* Lower pitch reinforces the male voice character when the selected
+           browser voice does not expose an explicit gender label. */
+        utterance.pitch=0.72;
+
+        const btn=document.getElementById("hearResultButton");
+        if(btn)btn.classList.add("speaking");
+
+        utterance.onstart=()=>{
+            resultVoiceMuted=false;
+            updateResultMuteButton();
+            setResultVoiceStatus("🔊 Speaking the full result and solution in "+language+"...");
+        };
+        utterance.onend=()=>{
+            if(btn)btn.classList.remove("speaking");
+            resultVoiceMuted=false;
+            updateResultMuteButton();
+            setResultVoiceStatus("Voice result completed. Click “Hear Result Again” to replay.");
+            resolve();
+        };
+        utterance.onerror=(event)=>{
+            if(btn)btn.classList.remove("speaking");
+            resultVoiceMuted=false;
+            updateResultMuteButton();
+            reject(new Error(event.error||"Speech synthesis failed"));
+        };
+
+        window.speechSynthesis.speak(utterance);
+    });
+}
+
+async function speakDiagnosisResult(englishStatement){
+    const token=++resultSpeechToken;
+    const selectedLanguage=getSelectedVoiceLanguage();
+    const targetCode=getTranslationTargetCode();
+
+    lastDiagnosisSpeechEnglish=englishStatement;
+    setHearResultEnabled(true);
+    setResultVoiceStatus("Preparing the full result, solution, and precautions in your selected language...");
+
+    try{
+        const localized=await translateFinalDiagnosis(englishStatement,targetCode);
+        if(token!==resultSpeechToken)return;
+
+        lastDiagnosisSpeechLocalized=localized;
+        setResultVoiceStatus("Diagnosis translated. Starting voice response...");
+        await speakText(localized,selectedLanguage);
+    }catch(error){
+        if(token!==resultSpeechToken)return;
+
+        /* English is a safe fallback only when the requested language's
+           translation service is unavailable. The UI clearly tells the user. */
+        lastDiagnosisSpeechLocalized="";
+        setResultVoiceStatus("Could not translate the full report into the selected language. Check your internet connection and click “Hear Result Again” to retry.");
+        console.warn("Final diagnosis voice translation failed:",error);
+    }
+}
+
+async function speakLastDiagnosis(){
+    if(!lastDiagnosisSpeechEnglish){
+        setResultVoiceStatus("Analyze the crop first to create a diagnosis.");
+        return;
+    }
+
+    const selectedLanguage=getSelectedVoiceLanguage();
+    const targetCode=getTranslationTargetCode();
+
+    try{
+        if(targetCode==="en"){
+            lastDiagnosisSpeechLocalized=lastDiagnosisSpeechEnglish;
+        }else{
+            setResultVoiceStatus("Translating the saved diagnosis into your selected language...");
+            lastDiagnosisSpeechLocalized=await translateFinalDiagnosis(lastDiagnosisSpeechEnglish,targetCode);
+        }
+        await speakText(lastDiagnosisSpeechLocalized,selectedLanguage);
+    }catch(error){
+        setResultVoiceStatus("Could not create the selected-language voice result. Please check your internet connection and try again.");
+        console.warn("Replay diagnosis voice failed:",error);
+    }
+}
+
+function buildDiagnosisVoiceStatement(crop,risk,top,confidence){
+    if(!top){
+        return "For your "+crop+" crop, I could not identify a specific disease with enough evidence. The current disease risk cannot be reliably estimated from the available symptoms. Please provide more details or a clear crop photo before treatment.";
+    }
+
+    const riskWord = risk==="HIGH" ? "high" : risk==="MEDIUM" ? "medium" : "low";
+    return "For your "+crop+" crop, the most likely problem is "+top.name+". The current disease risk is "+riskWord+", with an estimated symptom match of "+confidence+" percent. This is an AI assisted screening result, not a laboratory confirmed diagnosis. Please confirm the visible signs before applying treatment.";
+}
+
+/* Build a complete spoken report from the canonical English result fields.
+   The complete report is translated once into the selected language before speaking. */
+function buildFullResultVoiceStatement(summary){
+    const sections = [
+        ["Diagnosis", "diagnosisTitle"],
+        ["Problem details", "diagnosisText"],
+        ["Interpretation", "intentInterpretation"],
+        ["Observed clues", "intentClues"],
+        ["Irrigation advice", "irrigation"],
+        ["Disease or category", "disease"],
+        ["Protection", "protection"],
+        ["Recommended action", "action"],
+        ["Solution and precautions", "solution"]
+    ];
+    const parts = [summary];
+    sections.forEach(([label,id])=>{
+        const el=document.getElementById(id);
+        const value=el ? (el.dataset.englishResultText || el.textContent || "").trim() : "";
+        if(value) parts.push(label+". "+value);
+    });
+    return parts.join(". ");
+}
+
+
+/* Localize the two requested result areas: Diagnosis Result and Solution/Precautions.
+   Dynamic diagnosis/advice is translated from canonical English; fixed headings use
+   reviewed translations so they still change even if a public translation service fails. */
+let diagnosisLocalizationToken = 0;
+const RESULT_LABEL_TRANSLATIONS = {
+  te: {diagnosisHeader:"నిర్ధారణ ఫలితం", intentHeader:"రైతు ఉద్దేశం", irrigation:"నీటిపారుదల", disease:"వ్యాధి ప్రమాదం", protection:"పంట రక్షణ", action:"సూచించిన చర్యలు", solution:"పరిష్కారం: ఉపయోగించాల్సినవి మరియు జాగ్రత్తలు", hear:"ఫలితాన్ని మళ్లీ వినండి", mute:"ధ్వనిని ఆపండి", whatUse:"ఉపయోగించాల్సినవి", precautions:"జాగ్రత్తలు", low:"తక్కువ", medium:"మధ్యస్థం", high:"ఎక్కువ"},
+  hi: {diagnosisHeader:"निदान परिणाम", intentHeader:"किसान का आशय", irrigation:"सिंचाई", disease:"रोग का जोखिम", protection:"फसल सुरक्षा", action:"सुझाए गए कदम", solution:"समाधान: क्या उपयोग करें और सावधानियाँ", hear:"परिणाम फिर सुनें", mute:"आवाज़ बंद करें", whatUse:"क्या उपयोग करें", precautions:"सावधानियाँ", low:"कम", medium:"मध्यम", high:"अधिक"},
+  ta: {diagnosisHeader:"நோய் கண்டறிதல் முடிவு", intentHeader:"விவசாயி கூறியதன் பொருள்", irrigation:"நீர்ப்பாசனம்", disease:"நோய் அபாயம்", protection:"பயிர் பாதுகாப்பு", action:"பரிந்துரைக்கப்படும் நடவடிக்கை", solution:"தீர்வு: பயன்படுத்த வேண்டியவை மற்றும் முன்னெச்சரிக்கைகள்", hear:"முடிவை மீண்டும் கேளுங்கள்", mute:"ஒலியை நிறுத்து", whatUse:"எதைப் பயன்படுத்துவது", precautions:"முன்னெச்சரிக்கைகள்", low:"குறைவு", medium:"நடுத்தரம்", high:"அதிகம்"},
+  kn: {diagnosisHeader:"ರೋಗನಿರ್ಣಯ ಫಲಿತಾಂಶ", intentHeader:"ರೈತರು ಹೇಳಿದ ಅರ್ಥ", irrigation:"ನೀರಾವರಿ", disease:"ರೋಗದ ಅಪಾಯ", protection:"ಬೆಳೆ ರಕ್ಷಣೆ", action:"ಶಿಫಾರಸು ಮಾಡಿದ ಕ್ರಮಗಳು", solution:"ಪರಿಹಾರ: ಬಳಸಬೇಕಾದವು ಮತ್ತು ಮುನ್ನೆಚ್ಚರಿಕೆಗಳು", hear:"ಫಲಿತಾಂಶವನ್ನು ಮತ್ತೆ ಕೇಳಿ", mute:"ಧ್ವನಿ ನಿಲ್ಲಿಸಿ", whatUse:"ಏನು ಬಳಸಬೇಕು", precautions:"ಮುನ್ನೆಚ್ಚರಿಕೆಗಳು", low:"ಕಡಿಮೆ", medium:"ಮಧ್ಯಮ", high:"ಹೆಚ್ಚು"},
+  ml: {diagnosisHeader:"രോഗനിർണയ ഫലം", intentHeader:"കർഷകൻ ഉദ്ദേശിച്ചത്", irrigation:"ജലസേചനം", disease:"രോഗസാധ്യത", protection:"വിള സംരക്ഷണം", action:"ശുപാർശ ചെയ്യുന്ന നടപടികൾ", solution:"പരിഹാരം: ഉപയോഗിക്കേണ്ടവയും മുൻകരുതലുകളും", hear:"ഫലം വീണ്ടും കേൾക്കുക", mute:"ശബ്ദം നിർത്തുക", whatUse:"എന്ത് ഉപയോഗിക്കണം", precautions:"മുൻകരുതലുകൾ", low:"കുറവ്", medium:"ഇടത്തരം", high:"കൂടുതൽ"},
+  mr: {diagnosisHeader:"निदानाचा निकाल", intentHeader:"शेतकऱ्याचा अर्थ", irrigation:"सिंचन", disease:"रोगाचा धोका", protection:"पीक संरक्षण", action:"सुचवलेली कृती", solution:"उपाय: काय वापरावे आणि खबरदारी", hear:"निकाल पुन्हा ऐका", mute:"आवाज बंद करा", whatUse:"काय वापरावे", precautions:"खबरदारी", low:"कमी", medium:"मध्यम", high:"जास्त"},
+  bn: {diagnosisHeader:"রোগ নির্ণয়ের ফলাফল", intentHeader:"কৃষক কী বোঝাতে চেয়েছেন", irrigation:"সেচ", disease:"রোগের ঝুঁকি", protection:"ফসলের সুরক্ষা", action:"প্রস্তাবিত পদক্ষেপ", solution:"সমাধান: কী ব্যবহার করবেন ও সতর্কতা", hear:"ফলাফল আবার শুনুন", mute:"শব্দ বন্ধ করুন", whatUse:"কী ব্যবহার করবেন", precautions:"সতর্কতা", low:"কম", medium:"মাঝারি", high:"বেশি"}
+};
+function applyResultHeadings(targetCode){
+  const labels = RESULT_LABEL_TRANSLATIONS[targetCode] || null;
+  const setText = (selector, value) => { const el=document.querySelector(selector); if(el && value) { if(!el.dataset.englishLabel) el.dataset.englishLabel=el.textContent; el.textContent=value; } };
+  if(!labels){
+    document.querySelectorAll('.result-header strong, .recommendation > strong, .diagnosis h4').forEach(el=>{if(el.dataset.englishLabel)el.textContent=el.dataset.englishLabel;});
+    const hear=document.getElementById('hearResultButton'); if(hear)hear.textContent='🔊 Hear Result Again';
+    const mute=document.getElementById('muteResultButton'); if(mute)mute.textContent='🔊 Mute Voice';
+    return;
+  }
+  setText('.result-header strong',labels.diagnosisHeader);
+  const headings=document.querySelectorAll('.recommendation > strong');
+  const values=[labels.irrigation,labels.disease,labels.protection,labels.action,labels.solution];
+  headings.forEach((el,i)=>{if(!el.dataset.englishLabel)el.dataset.englishLabel=el.textContent; if(values[i])el.textContent=values[i];});
+  const hear=document.getElementById('hearResultButton'); if(hear)hear.textContent='🔊 '+labels.hear;
+  const mute=document.getElementById('muteResultButton'); if(mute)mute.textContent='🔊 '+labels.mute;
+  const solution=document.getElementById('solution');
+  if(solution){
+    // Translate the two subsection labels inside the solution content after translating its full text.
+    solution.dataset.whatUseLabel=labels.whatUse; solution.dataset.precautionsLabel=labels.precautions;
+  }
+}
+async function localizeDiagnosisPanel(){
+    const token = ++diagnosisLocalizationToken;
+    const selectedLanguage = getSelectedVoiceLanguage();
+    const targetCode = getTranslationTargetCode();
+    const fields = ["diagnosisTitle","diagnosisText","intentInterpretation","intentClues","irrigation","disease","protection","action","solution"];
+    const originals = fields.map(id => {
+        const el = document.getElementById(id);
+        if(el && el.dataset.englishResultText === undefined) el.dataset.englishResultText = el.textContent;
+        return {id, text: el ? (el.dataset.englishResultText || "").trim() : ""};
+    });
+    applyResultHeadings(targetCode);
+    if(targetCode === "en") {
+        originals.forEach(item=>{const el=document.getElementById(item.id); if(el)el.textContent=item.text;});
+        return;
+    }
+    setResultVoiceStatus("Translating diagnosis, solution and precautions into " + selectedLanguage + "…");
+    let failures = 0;
+    for(const item of originals){
+        if(token !== diagnosisLocalizationToken || selectedLanguage !== getSelectedVoiceLanguage()) return;
+        if(!item.text) continue;
+        try{
+            const translated = await translateFinalDiagnosis(item.text, targetCode);
+            if(token !== diagnosisLocalizationToken || selectedLanguage !== getSelectedVoiceLanguage()) return;
+            const el = document.getElementById(item.id);
+            if(el && translated) {
+              el.textContent = translated;
+              if(item.id === "solution") {
+                const labels=RESULT_LABEL_TRANSLATIONS[targetCode];
+                if(labels) el.textContent=el.textContent.replace(/WHAT TO USE/gi,labels.whatUse).replace(/PRECAUTIONS/gi,labels.precautions);
+              }
+            } else failures++;
+        }catch(err){ failures++; console.warn("Could not translate field " + item.id, err); }
+    }
+    if(token !== diagnosisLocalizationToken || selectedLanguage !== getSelectedVoiceLanguage()) return;
+    if(failures){
+        setResultVoiceStatus("Translation service failed for some text. Check internet access and try selecting the language again.");
+    } else {
+        setResultVoiceStatus("Diagnosis, solution and precautions are displayed in " + selectedLanguage + ". Click the voice button to listen.");
+    }
+}
+
+
+/* ================= AUTOMATIC FARM RECORDS + EXCEL-COMPATIBLE CSV ================= */
+const AGRI_RECORDS_KEY = "agriai_farm_records_v1";
+let agriExcelFileHandle = null;
+let agriSaveQueue = Promise.resolve();
+
+function getAgriRecords(){
+  try { return JSON.parse(localStorage.getItem(AGRI_RECORDS_KEY) || "[]"); }
+  catch(e){ return []; }
+}
+function setAgriSaveStatus(message, isError=false){
+  const el=document.getElementById("farmSaveStatus");
+  if(el){el.textContent=message;el.style.color=isError?"#b42323":"#557060";}
+}
+function refreshAgriRecordCount(){
+  const el=document.getElementById("farmRecordCount");
+  if(el)el.textContent=getAgriRecords().length+" saved record(s)";
+}
+function csvCell(value){
+  const text=String(value ?? "").replace(/\r\n/g,"\n").replace(/\r/g,"\n");
+  return '"' + text.replace(/"/g,'""') + '"';
+}
+function agriRecordsToCSV(records){
+  const headers=["Record ID","Date & Time","Crop","Temperature (C)","Humidity (%)","Soil Moisture (%)","Symptom Type","Selected Symptoms","Voice / Problem Description","Risk","Diagnosis Title","Diagnosis Details","Farmer Meaning","Irrigation Advice","Disease Risk","Crop Protection","Prevention Advice","Solution & Precautions","Website Language"];
+  const rows=records.map(r=>[
+    r.id,r.dateTime,r.crop,r.temperature,r.humidity,r.soil,r.symptomType,r.symptoms,
+    r.problemDescription,r.risk,r.diagnosisTitle,r.diagnosisDetails,r.farmerMeaning,
+    r.irrigation,r.diseaseRisk,r.cropProtection,r.preventionAdvice,r.solution,r.language
+  ]);
+  return "\uFEFF"+[headers,...rows].map(row=>row.map(csvCell).join(",")).join("\r\n");
+}
+function makeAgriRecord(){
+  const val=id=>document.getElementById(id)?.value ?? "";
+  const txt=id=>document.getElementById(id)?.innerText ?? "";
+  const now=new Date();
+  return {
+    id:"AGRI-"+now.getTime(),
+    dateTime:now.toLocaleString(),
+    crop:val("crop"),
+    temperature:val("temperature"),
+    humidity:val("humidity"),
+    soil:val("soil"),
+    symptomType:val("symptomType"),
+    symptoms:val("symptoms"),
+    problemDescription:val("voiceTranscript") || window.agriVoiceDescription || "",
+    risk:txt("risk"),
+    diagnosisTitle:txt("diagnosisTitle"),
+    diagnosisDetails:txt("diagnosisText"),
+    farmerMeaning:txt("intentInterpretation")+" "+txt("intentClues"),
+    irrigation:txt("irrigation"),
+    diseaseRisk:txt("disease"),
+    cropProtection:txt("protection"),
+    preventionAdvice:txt("action"),
+    solution:txt("solution"),
+    language:val("siteLanguage")
+  };
+}
+async function writeAgriRecordsToConnectedFile(){
+  if(!agriExcelFileHandle)return;
+  const csv=agriRecordsToCSV(getAgriRecords());
+  const writable=await agriExcelFileHandle.createWritable();
+  await writable.write(csv);
+  await writable.close();
+  setAgriSaveStatus("Automatically updated the connected Excel-compatible CSV file on your computer.");
+}
+function saveAgriDiagnosisRecord(){
+  const record=makeAgriRecord();
+  const records=getAgriRecords();
+  records.push(record);
+  try{
+    localStorage.setItem(AGRI_RECORDS_KEY,JSON.stringify(records));
+    refreshAgriRecordCount();
+    setAgriSaveStatus("Latest analysis saved automatically in this browser. "+(agriExcelFileHandle?"Updating your connected file…":"Connect an Excel file to also save it on your computer."));
+  }catch(e){
+    setAgriSaveStatus("Browser storage is full. Download your records for backup.",true);
+  }
+  if(agriExcelFileHandle){
+    agriSaveQueue=agriSaveQueue.then(writeAgriRecordsToConnectedFile).catch(e=>{
+      setAgriSaveStatus("Browser could not update the connected file. Reconnect it or download a backup. "+e.message,true);
+    });
+  }
+}
+async function connectFarmExcelFile(){
+  if(!window.showSaveFilePicker){
+    setAgriSaveStatus("This browser does not support direct file updates. Use Download All Records for Excel instead.",true);
+    return;
+  }
+  try{
+    agriExcelFileHandle=await window.showSaveFilePicker({
+      suggestedName:"AgriAI_Farm_Records.csv",
+      types:[{description:"Excel-compatible CSV file",accept:{"text/csv":[".csv"]}}]
+    });
+    await writeAgriRecordsToConnectedFile();
+    setAgriSaveStatus("Connected! New crop analyses will update this file automatically while the website remains open.");
+  }catch(e){
+    if(e.name!=="AbortError")setAgriSaveStatus("Could not connect the file: "+e.message,true);
+  }
+}
+function downloadFarmRecords(){
+  const records=getAgriRecords();
+  if(!records.length){setAgriSaveStatus("No crop analyses have been saved yet.",true);return;}
+  const blob=new Blob([agriRecordsToCSV(records)],{type:"text/csv;charset=utf-8;"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download="AgriAI_Farm_Records.csv";
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  setAgriSaveStatus("Downloaded all "+records.length+" record(s). Open the CSV file with Microsoft Excel.");
+}
+window.addEventListener("DOMContentLoaded",refreshAgriRecordCount);
+
+async function diagnoseCrop(fromVoice=false,englishSpeech=""){
+    const payload=buildAnalysisPayload(englishSpeech);
+    const crop=payload.crop,temperature=payload.temperature,humidity=payload.humidity,soil=payload.soil;
+    const selectedText=normalizeSpeech(payload.selectedSymptoms.join(" "));
+    // English is the canonical reasoning language. The original speech is retained for reference.
+    const reasoningText=(payload.englishProblem||payload.spokenProblem)+" "+selectedText;
+    const intent=extractSemanticIntent(reasoningText);
+    lastIntent=intent;
+    if(!intent.understood && !payload.selectedSymptoms.length){
+      document.getElementById("risk").textContent="LOW EVIDENCE";
+      document.getElementById("diagnosisTitle").textContent="I need more information";
+      document.getElementById("diagnosisText").textContent="I understood that you are reporting a crop problem, but not enough observable detail was detected. Describe the colour, affected part, shape, insect activity, whether it is spreading, and how the plant is changing.";
+      renderInterpretation(intent,null,[]);
+      ["diagnosisTitle","diagnosisText","intentInterpretation","intentClues"].forEach(id=>{
+        const el=document.getElementById(id); if(el) el.dataset.englishResultText=el.textContent;
+      });
+      await localizeDiagnosisPanel();
+      const noEvidenceSummary = "I need more information. I understood that you are reporting a crop problem, but not enough observable detail was detected. Describe the colour, affected part, shape, insect activity, whether it is spreading, and how the plant is changing.";
+      speakDiagnosisResult(noEvidenceSummary + ". " + buildFullResultVoiceStatement(noEvidenceSummary));
+      saveAgriDiagnosisRecord();
+      return;
+    }
+
+    const profiles=DISEASE_PROFILES[crop]||[];
+    const scored=profiles.map(p=>({...p,...scoreProfile(p,intent,temperature,humidity,soil)})).filter(x=>x.matched.length).sort((a,b)=>b.score-a.score);
+    const stress=semanticStress(intent,temperature,humidity,soil);
+    let candidates=[...scored.map(x=>({name:x.name,category:x.category,confidence:x.score,why:x.clues?.length?"The spoken description contains disease-specific clues.":"The symptom combination fits this pattern.",advice:x.advice,matched:x.matched.length})),...stress].sort((a,b)=>b.confidence-a.confidence);
+    let top=candidates[0]||null;
+
+    const localTop=top;
+    renderInterpretation(intent,top,[]);
+    setVoiceStatus(AGRI_AI_SERVERS.length?"Local semantic analysis complete. Asking independent AI analysis servers to cross-check the farmer's meaning...":"Voice meaning understood. Running crop-specific semantic disease analysis...");
+
+    // Multi-server cross-check. This is intentionally optional so the standalone site still works.
+    let remote=[];
+    try{remote=await queryIndependentServers(payload);}catch(e){remote=[];}
+    if(remote.length && top)top=mergeServerResults(remote,top);
+    if(remote.length)renderInterpretation(intent,top,remote);
+
+    let risk="LOW";
+    let title="No strong disease pattern found";
+    let text="The spoken description contains crop-health clues, but no disease pattern is strong enough to name confidently. More observations or a crop photo would improve the result.";
+    let protection="Do not apply pesticide solely from this result. Confirm the distinguishing signs first.";
+    let action="Inspect the crop weekly and note changes. Keep tools clean, provide suitable plant spacing and drainage, water at the root zone, and avoid excess fertilizer. Remove affected material only when appropriate. Confirm the cause with a local agriculture expert before applying pesticides.";
+    let solution="WHAT TO USE\n• Start with clean water, clean tools, and crop-appropriate irrigation; check soil moisture before watering.\n• Use mulch or improve drainage only when suitable for this crop and field conditions.\n\nPRECAUTIONS\n• Do not mix or apply pesticides/fertilizers based only on this AI result.\n• Confirm symptoms with a local agriculture officer or extension expert; follow the product label and local rules if treatment is recommended.\n• Wear the protective equipment specified on the label and keep people, animals, and water sources safe.";
+    let irrigation=soil<25?"Soil moisture is very low. Verify the reading and irrigate appropriately for the crop.":soil<40?"Moderate moisture stress is possible. Check the root zone before irrigating.":soil>70?"Soil is very wet. Avoid unnecessary irrigation and check drainage.":"Soil moisture is not showing an immediate extreme.";
+
+    if(top){
+      const confidence=Math.min(96,Math.max(45,Math.round(top.confidence)));
+      risk=confidence>=75?"HIGH":confidence>=58?"MEDIUM":"LOW";
+      title=crop+" — "+top.name;
+      text="Most likely pattern: "+top.name+" ("+confidence+"% match). "+top.why;
+      if(candidates[1])text+=" Alternative possibility: "+candidates[1].name+" ("+Math.min(90,Math.round(candidates[1].confidence))+"% match).";
+      if(top.serverConsensus)text+=" "+top.serverConsensus+" agreed on this interpretation.";
+      text+=" This is an AI-assisted screening result, not a laboratory-confirmed diagnosis.";
+      protection=top.advice;
+      action="To reduce the chance of "+top.name+": inspect crops regularly, remove weeds and badly affected plant material where appropriate, keep tools clean, avoid excess moisture on leaves, and maintain balanced nutrition. Check the specific signs and ask a local agriculture officer for crop-specific prevention steps before using any pesticide.";
+      if(/viral/i.test(top.category)||/virus/i.test(top.name)){
+        solution="WHAT TO USE\n• Use certified disease-free seeds or planting material and varieties recommended for your area.\n• Monitor insect vectors; yellow sticky cards may help monitor some flying pests when recommended locally. They do not cure a virus.\n\nPRECAUTIONS\n• There is no pesticide that cures a virus inside an infected plant. Do not spray without identifying the vector and confirming local advice.\n• Remove severely affected plants only when advised for this crop; clean tools and avoid moving infested plants between fields.";
+      }else if(/insect|pest|armyworm|aphid|whitefly|thrips/i.test(top.category+" "+top.name)){
+        solution="WHAT TO USE\n• Inspect leaf undersides, growing tips, and plant whorls to identify the pest. Use physical removal, insect-proof nursery netting, or suitable monitoring traps where appropriate.\n• Prefer integrated pest management and locally recommended, crop-specific controls.\n\nPRECAUTIONS\n• Confirm the pest before choosing a treatment; traps monitor pests but may not control an infestation alone.\n• Avoid unnecessary broad-spectrum sprays that can harm pollinators and beneficial insects. Follow label directions and local agriculture advice.";
+      }else if(/fungal|oomycete/i.test(top.category)){
+        solution="WHAT TO USE\n• Begin with clean tools, good drainage, suitable plant spacing, and watering at the soil/root zone rather than wetting foliage.\n• Remove badly affected leaves or fruit only when appropriate, and use disease-free planting material.\n• If treatment is needed, ask an agriculture officer for a locally approved product specifically labelled for this crop and disease.\n\nPRECAUTIONS\n• Do not assume every spot is fungal or apply a fungicide from this AI result alone. Some diseases look similar but need different management.\n• Follow the product label, protective-equipment instructions, harvest waiting period, and local regulations.";
+      }else if(/bacterial/i.test(top.category)){
+        solution="WHAT TO USE\n• Use clean tools and disease-free planting material; improve drainage and avoid unnecessary handling of wet plants.\n• Remove affected material only when appropriate and seek crop-specific advice on bacterial disease management.\n\nPRECAUTIONS\n• Fungicides do not treat every bacterial disease, and similar symptoms can have different causes. Confirm the problem before treatment.\n• Avoid moving wet/affected plant material between plants or fields; follow local expert guidance before using any product.";
+      }else if(/stress|water/i.test(top.category)||/water stress/i.test(top.name)){
+        solution="WHAT TO USE\n• Check soil moisture by hand or with a reliable meter and inspect drainage around the root zone.\n• Water gradually if the soil is too dry, or pause irrigation and improve drainage if it is waterlogged; match watering to the crop and soil.\n\nPRECAUTIONS\n• Do not add fertilizer or pesticide to solve a water-stress problem without evidence.\n• Recheck the soil and plant response; persistent symptoms need assessment for root damage or disease.";
+      }else{
+        solution="WHAT TO USE\n• Use clean tools, disease-free planting material, appropriate irrigation, good drainage, and balanced crop nutrition.\n• Remove affected material only when appropriate. Ask a local agriculture officer about any crop-specific treatment.\n\nPRECAUTIONS\n• The AI result is a screening suggestion, not a confirmed diagnosis. Do not choose a pesticide or dose from this result alone.\n• If treatment is recommended, use only a product registered for this crop/problem and follow its label, protective equipment, and harvest waiting period.";
+      }
+    }
+    if(humidity>85 && top && /fungal|oomycete/i.test(top.category))text+=" High humidity increases the plausibility of this type of disease.";
+    document.getElementById("risk").textContent=risk;
+    document.getElementById("diagnosisTitle").textContent=title;
+    document.getElementById("diagnosisText").textContent=text;
+    document.getElementById("irrigation").textContent=irrigation;
+    document.getElementById("disease").textContent=top?(Math.min(96,Math.max(45,Math.round(top.confidence)))+"% match — "+top.category):"Insufficient evidence";
+    document.getElementById("protection").textContent=protection;
+    document.getElementById("action").textContent=action;
+    document.getElementById("solution").textContent=solution;
+    ["diagnosisTitle","diagnosisText","intentInterpretation","intentClues","irrigation","disease","protection","action","solution"].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el){el.dataset.englishResultText=el.textContent;}
+    });
+    const riskElement=document.getElementById("risk");
+    if(risk==="HIGH"){riskElement.style.background="#ffe0e0";riskElement.style.color="#b42323";}
+    else if(risk==="MEDIUM"){riskElement.style.background="#fff0d9";riskElement.style.color="#a76500";}
+    else{riskElement.style.background="#e2f7e8";riskElement.style.color="#16823e";}
+    setVoiceStatus(remote.length?"Analysis complete. The spoken meaning was cross-checked by independent AI server(s).":"Analysis complete using the built-in semantic crop-disease engine.");
+
+    /* Speak the final problem + risk in the language selected by the farmer. */
+    const finalConfidence=top?Math.min(96,Math.max(45,Math.round(top.confidence))):0;
+    const finalVoiceSummary=buildDiagnosisVoiceStatement(crop,risk,top,finalConfidence);
+    await localizeDiagnosisPanel();
+    const fullVoiceStatement=buildFullResultVoiceStatement(finalVoiceSummary);
+    speakDiagnosisResult(fullVoiceStatement);
+    saveAgriDiagnosisRecord();
+}
+
+async function analyzeVoiceProblem(){
+    const speech=document.getElementById("voiceTranscript").value.trim();
+    if(!speech && selectedSymptoms.size===0){setVoiceStatus("Please speak or describe the crop problem first.");return;}
+    window.agriVoiceDescription=speech;
+    let english=speech;
+    if(speech){
+        const translated=await translateSpeechToEnglish(speech);
+        english=translated.text||speech;
+        setVoiceStatus("English translation ready. Now analyzing the farmer's meaning and crop symptoms...");
+    }
+    await diagnoseCrop(true,english);
+    document.getElementById("doctor").scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+function toggleVoiceInput(){
+    const API=getSpeechRecognition();
+    if(!API){setVoiceStatus("Voice input is not supported by this browser. Please use Chrome or Edge, or type the problem manually.");return;}
+    if(isListening&&recognition){recognition.stop();return;}
+    // Starting a new recording begins a fresh voice query. Clear the previous spoken
+    // sentence and its English translation so old speech cannot be mixed with new speech.
+    const oldBox=document.getElementById("voiceTranscript");
+    const oldEnglish=document.getElementById("englishTranscript");
+    oldBox.value="";
+    if(oldEnglish) oldEnglish.value="";
+    window.agriVoiceDescription="";
+    window.agriEnglishDescription="";
+    lastVoiceAlternatives=[];
+
+    recognition=new API();
+    recognition.lang=document.getElementById("voiceLanguage").value;
+    recognition.continuous=false; recognition.interimResults=true; recognition.maxAlternatives=5;
+    const button=document.getElementById("voiceButton"), box=document.getElementById("voiceTranscript");
+    recognition.onstart=()=>{isListening=true;button.classList.add("listening");button.innerHTML="⏹️ Stop Listening";setVoiceStatus("Listening... Describe the crop problem naturally, even if it does not match the symptom options.");};
+    recognition.onresult=(event)=>{
+      let finalText="",interim="";lastVoiceAlternatives=[];
+      for(let i=event.resultIndex;i<event.results.length;i++){
+        const result=event.results[i];
+        if(result.isFinal){
+          finalText+=(result[0]?.transcript||"")+" ";
+          for(let j=0;j<result.length;j++)lastVoiceAlternatives.push(result[j].transcript||"");
+        }else interim+=result[0]?.transcript||"";
+      }
+      if(finalText.trim()){
+        box.value=(box.value+" "+finalText).trim();
+        window.agriVoiceDescription=box.value;
+        extractSymptomsFromSpeech(finalText);
+        // Show an automatic English translation immediately after speech capture.
+        translateSpeechToEnglish(box.value).then(result=>{
+          const english=result.text||box.value;
+          window.agriEnglishDescription=english;
+          const englishBox=document.getElementById("englishTranscript");
+          if(englishBox) englishBox.value=english;
+          const intent=extractSemanticIntent(english);
+          setVoiceStatus(intent.understood?"Speech translated to English and understood. Click Analyze Spoken Problem for disease reasoning.":"Speech translated to English. Click Analyze Spoken Problem to continue with AI analysis.");
+        }).catch(()=>setVoiceStatus("Speech captured. Click Analyze Spoken Problem to translate and analyze it."));
+      }else if(interim)setVoiceStatus("Hearing: "+interim);
+    };
+    recognition.onerror=(event)=>{const m={"not-allowed":"Microphone permission was denied. Allow microphone access and try again.","no-speech":"No speech detected. Please speak clearly and try again.","audio-capture":"No microphone was detected.","network":"Speech recognition needs a network connection in this browser."};setVoiceStatus(m[event.error]||"Voice recognition could not complete. Please try again.");};
+    recognition.onend=()=>{isListening=false;button.classList.remove("listening");button.innerHTML="🎙️ Start Speaking";};
+    try{recognition.start();}catch(e){setVoiceStatus("Voice input could not start. Please try again.");}
+}
+
+/* ================= COMPLETE WEBSITE LANGUAGE SUPPORT =================
+   Keeps the original AgriAI design and features. The language picker updates
+   visible website copy, controls, placeholders, dynamic symptom choices/statuses,
+   and the existing diagnosis localization routine. Translation requires internet.
+*/
+const SITE_LANG_CODES={"en-IN":"en","te-IN":"te","hi-IN":"hi","ta-IN":"ta","kn-IN":"kn","ml-IN":"ml","mr-IN":"mr","bn-IN":"bn"};
+const SITE_STATUS_TEXT={
+  "en":"English selected","te":"వెబ్‌సైట్‌ను అనువదిస్తోంది…","hi":"वेबसाइट का अनुवाद हो रहा है…","ta":"இணையதளம் மொழிபெயர்க்கப்படுகிறது…","kn":"ವೆಬ್‌ಸೈಟ್ ಅನುವಾದಿಸಲಾಗುತ್ತಿದೆ…","ml":"വെബ്സൈറ്റ് വിവർത്തനം ചെയ്യുന്നു…","mr":"वेबसाइटचे भाषांतर सुरू आहे…","bn":"ওয়েবসাইট অনুবাদ করা হচ্ছে…"
+};
+const SITE_DONE_TEXT={
+  "en":"Website language updated","te":"వెబ్‌సైట్ భాష మార్చబడింది","hi":"वेबसाइट की भाषा बदल दी गई है","ta":"இணையதள மொழி மாற்றப்பட்டது","kn":"ವೆಬ್‌ಸೈಟ್ ಭಾಷೆ ಬದಲಾಯಿಸಲಾಗಿದೆ","ml":"വെബ്സൈറ്റ് ഭാഷ മാറ്റി","mr":"वेबसाइटची भाषा बदलली आहे","bn":"ওয়েবসাইটের ভাষা পরিবর্তন করা হয়েছে"
+};
+const SITE_ERROR_TEXT={
+  "en":"Some text could not be translated. Check your internet connection and try again.","te":"కొంత వచనం అనువదించబడలేదు. ఇంటర్నెట్‌ను తనిఖీ చేసి మళ్లీ ప్రయత్నించండి.","hi":"कुछ पाठ का अनुवाद नहीं हो सका। इंटरनेट जाँचकर फिर प्रयास करें।","ta":"சில உரைகளை மொழிபெயர்க்க முடியவில்லை. இணைய இணைப்பைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.","kn":"ಕೆಲವು ಪಠ್ಯವನ್ನು ಅನುವಾದಿಸಲಾಗಲಿಲ್ಲ. ಇಂಟರ್ನೆಟ್ ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.","ml":"ചില വാചകങ്ങൾ വിവർത്തനം ചെയ്യാനായില്ല. ഇന്റർനെറ്റ് പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.","mr":"काही मजकूर अनुवादित झाला नाही. इंटरनेट तपासून पुन्हा प्रयत्न करा.","bn":"কিছু লেখা অনুবাদ করা যায়নি। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।"
+};
+const siteTranslationCache=new Map();
+const siteTextState=new Map();
+const siteAttributeState=new Map();
+let siteLanguageRun=0;
+let siteMutationObserver=null;
+let siteMutationTimer=null;
+let siteOriginalTitle=document.title;
+function siteTargetCode(){return SITE_LANG_CODES[document.getElementById('siteLanguage')?.value||getSelectedVoiceLanguage()]||'en';}
+function siteCurrentLanguage(){return document.getElementById('siteLanguage')?.value||getSelectedVoiceLanguage()||'en-IN';}
+function siteSetStatus(kind,target){
+  const el=document.getElementById('siteLanguageStatus'); if(!el)return;
+  const map=kind==='loading'?SITE_STATUS_TEXT:(kind==='error'?SITE_ERROR_TEXT:SITE_DONE_TEXT);
+  el.textContent=map[target]||map.en;
+}
+async function translateSiteString(source,target){
+  if(!source||!source.trim()||target==='en')return source;
+  const clean=source.trim();
+  if(/^[\s\d\W_]+$/u.test(clean))return source;
+  const key=target+'::'+clean;
+  if(siteTranslationCache.has(key))return siteTranslationCache.get(key);
+  const value=await translateFinalDiagnosis(clean,target);
+  if(value)siteTranslationCache.set(key,value);
+  return value||source;
+}
+function shouldSkipSiteText(node){
+  const parent=node.parentElement;
+  if(!parent||!node.nodeValue.trim())return true;
+  return !!parent.closest('script,style,noscript,textarea,option,#voiceTranscript,#englishTranscript,#diagnosisTitle,#diagnosisText,#intentInterpretation,#intentClues,#irrigation,#disease,#protection,#action,#solution,#siteLanguageStatus,#siteLanguage,#voiceLanguage');
+}
+function getSiteTextNodes(root=document.body){
+  const out=[];
+  if(!root)return out;
+  if(root.nodeType===Node.TEXT_NODE){if(!shouldSkipSiteText(root))out.push(root);return out;}
+  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+  while(walker.nextNode()){const node=walker.currentNode;if(!shouldSkipSiteText(node))out.push(node);}
+  return out;
+}
+function getSiteAttributeJobs(root=document.body){
+  const jobs=[];
+  if(!root||root.nodeType===Node.TEXT_NODE)return jobs;
+  const elements=[];
+  if(root.nodeType===Node.ELEMENT_NODE)elements.push(root);
+  elements.push(...root.querySelectorAll?.('input[placeholder],textarea[placeholder],button[aria-label],select[aria-label],input[aria-label],[title]')||[]);
+  for(const el of elements){
+    if(el.closest?.('#siteLanguage,#voiceLanguage,#diagnosisTitle,#diagnosisText,#intentInterpretation,#intentClues,#irrigation,#disease,#protection,#action,#solution'))continue;
+    for(const attr of ['placeholder','aria-label','title']){
+      if(!el.hasAttribute(attr))continue;
+      const key=el.tagName+'#'+(el.id||'')+':'+attr;
+      let state=siteAttributeState.get(el);
+      if(!state){state={};siteAttributeState.set(el,state);}
+      if(!state[attr])state[attr]={source:el.getAttribute(attr),applied:null};
+      const a=state[attr];
+      if(a.applied!==null&&el.getAttribute(attr)===a.applied)continue;
+      if(a.applied===null||el.getAttribute(attr)!==a.applied)a.source=el.getAttribute(attr);
+      jobs.push({kind:'attr',el,attr,state:a,source:a.source});
+    }
+  }
+  // Translate crop/symptom select option labels, but preserve the language pickers.
+  const selects=[];
+  if(root.matches?.('select'))selects.push(root);
+  selects.push(...root.querySelectorAll?.('select')||[]);
+  for(const select of selects){
+    if(select.id==='siteLanguage'||select.id==='voiceLanguage')continue;
+    for(const option of select.options){
+      if(!option.dataset.siteEnglish)option.dataset.siteEnglish=option.textContent;
+      jobs.push({kind:'option',el:option,source:option.dataset.siteEnglish});
+    }
+  }
+  return jobs;
+}
+async function translateSiteJobs(jobs,target,run){
+  let cursor=0,failures=0;
+  async function worker(){
+    while(cursor<jobs.length){
+      const job=jobs[cursor++];
+      if(run!==siteLanguageRun)return;
+      try{
+        const translated=await translateSiteString(job.source,target);
+        if(run!==siteLanguageRun)return;
+        if(job.kind==='node'){
+          const state=siteTextState.get(job.node)||{source:job.source,applied:null};
+          state.source=job.source; state.applied=translated; siteTextState.set(job.node,state);
+          if(job.node.nodeValue!==translated)job.node.nodeValue=translated;
+        }else if(job.kind==='attr'){
+          job.state.applied=translated;
+          if(job.el.getAttribute(job.attr)!==translated)job.el.setAttribute(job.attr,translated);
+        }else{
+          if(job.el.textContent!==translated)job.el.textContent=translated;
+          job.el.dataset.siteApplied=translated;
+        }
+      }catch(e){failures++;}
+    }
+  }
+  await Promise.all(Array.from({length:5},worker));
+  return failures;
+}
+async function translateSiteSubtree(root){
+  const target=siteTargetCode();
+  if(target==='en')return;
+  const run=siteLanguageRun;
+  const nodes=getSiteTextNodes(root).filter(node=>{
+    const state=siteTextState.get(node);
+    return !state||node.nodeValue!==state.applied;
+  }).map(node=>{
+    let state=siteTextState.get(node);
+    if(!state){state={source:node.nodeValue,applied:null};siteTextState.set(node,state);}
+    else if(node.nodeValue!==state.applied)state.source=node.nodeValue;
+    return {kind:'node',node,source:state.source};
+  });
+  const attrs=getSiteAttributeJobs(root);
+  await translateSiteJobs([...nodes,...attrs],target,run);
+}
+async function applyWebsiteLanguage(language){
+  const run=++siteLanguageRun;
+  const target=SITE_LANG_CODES[language]||'en';
+  const voice=document.getElementById('voiceLanguage');if(voice&&voice.value!==language)voice.value=language;
+  const picker=document.getElementById('siteLanguage');if(picker&&picker.value!==language)picker.value=language;
+  document.documentElement.lang=target;
+  if(siteMutationObserver)siteMutationObserver.disconnect();
+  const allNodes=getSiteTextNodes(document.body);
+  // Restore each tracked text node to its original source before applying the new language.
+  for(const node of allNodes){
+    const state=siteTextState.get(node);
+    if(state){if(state.applied!==null&&node.nodeValue===state.applied)node.nodeValue=state.source;}
+    else siteTextState.set(node,{source:node.nodeValue,applied:null});
+  }
+  // Restore saved source attributes before translating into the newly selected language.
+  for(const el of document.querySelectorAll('input[placeholder],textarea[placeholder],button[aria-label],select[aria-label],input[aria-label],[title]')){
+    const state=siteAttributeState.get(el);if(state)for(const attr of Object.keys(state)){if(el.hasAttribute(attr)&&state[attr].applied!==null&&el.getAttribute(attr)===state[attr].applied)el.setAttribute(attr,state[attr].source);}
+  }
+  document.querySelectorAll('option').forEach(option=>{
+    if(option.closest('#siteLanguage,#voiceLanguage'))return;
+    if(!option.dataset.siteEnglish)option.dataset.siteEnglish=option.textContent;
+    option.textContent=option.dataset.siteEnglish;
+    delete option.dataset.siteApplied;
+  });
+  if(target==='en'){
+    for(const [node,state] of siteTextState){if(node.isConnected){node.nodeValue=state.source;state.applied=state.source;}}
+    for(const el of document.querySelectorAll('input[placeholder],textarea[placeholder],button[aria-label],select[aria-label],input[aria-label],[title]')){
+      const state=siteAttributeState.get(el);if(state)for(const attr of Object.keys(state)){if(el.hasAttribute(attr)){el.setAttribute(attr,state[attr].source);state[attr].applied=state[attr].source;}}
+    }
+    document.title=siteOriginalTitle;
+    siteSetStatus('done','en');
+    if(siteMutationObserver)siteMutationObserver.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['placeholder','aria-label','title']});
+    return;
+  }
+  siteSetStatus('loading',target);
+  let failures=0;
+  const jobs=[];
+  for(const node of getSiteTextNodes(document.body)){
+    let state=siteTextState.get(node);if(!state){state={source:node.nodeValue,applied:null};siteTextState.set(node,state);}
+    jobs.push({kind:'node',node,source:state.source});
+  }
+  jobs.push(...getSiteAttributeJobs(document.body));
+  // The native language pickers already show each language's own name; keep them unchanged.
+  failures+=await translateSiteJobs(jobs,target,run);
+  if(run!==siteLanguageRun)return;
+  try{
+    const title=await translateSiteString(siteOriginalTitle,target);
+    if(run===siteLanguageRun)document.title=title;
+  }catch(e){failures++;}
+  // The diagnosis panel has its own localization function to preserve the original result data.
+  try{if(typeof localizeDiagnosisPanel==='function')await localizeDiagnosisPanel();}catch(e){failures++;}
+  if(run!==siteLanguageRun)return;
+  siteSetStatus(failures?'error':'done',target);
+  if(siteMutationObserver)siteMutationObserver.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['placeholder','aria-label','title']});
+}
+function startSiteTranslationObserver(){
+  if(siteMutationObserver)siteMutationObserver.disconnect();
+  siteMutationObserver=new MutationObserver(records=>{
+    if(siteTargetCode()==='en')return;
+    const added=[];
+    for(const record of records){
+      if(record.type==='childList')record.addedNodes.forEach(n=>{if(n.nodeType===Node.ELEMENT_NODE||n.nodeType===Node.TEXT_NODE)added.push(n);});
+      else if(record.type==='characterData')added.push(record.target);
+      else if(record.type==='attributes')added.push(record.target);
+    }
+    if(!added.length)return;
+    clearTimeout(siteMutationTimer);
+    siteMutationTimer=setTimeout(async()=>{
+      if(siteMutationObserver)siteMutationObserver.disconnect();
+      const unique=[...new Set(added)];
+      for(const node of unique){
+        if(node.nodeType===Node.TEXT_NODE){
+          const state=siteTextState.get(node);
+          if(state&&node.nodeValue===state.applied)continue;
+          if(state)state.source=node.nodeValue;
+        }
+      }
+      for(const node of unique){if(node.isConnected)await translateSiteSubtree(node);}
+      if(siteMutationObserver)siteMutationObserver.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['placeholder','aria-label','title']});
+    },80);
+  });
+  siteMutationObserver.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['placeholder','aria-label','title']});
+}
+window.addEventListener('load',()=>{
+  const sitePicker=document.getElementById('siteLanguage');
+  const voicePicker=document.getElementById('voiceLanguage');
+  if(sitePicker&&voicePicker)sitePicker.value=voicePicker.value||'en-IN';
+  startSiteTranslationObserver();
+  if(sitePicker)sitePicker.addEventListener('change',()=>applyWebsiteLanguage(sitePicker.value));
+  if(voicePicker)voicePicker.addEventListener('change',async()=>{
+    stopDiagnosisSpeech();lastDiagnosisSpeechLocalized='';
+    if(sitePicker&&sitePicker.value!==voicePicker.value){sitePicker.value=voicePicker.value;await applyWebsiteLanguage(voicePicker.value);}
+    else if(typeof localizeDiagnosisPanel==='function'){
+      try{await localizeDiagnosisPanel();}catch(e){console.warn('Diagnosis translation failed:',e);}
+    }
+  });
+});
+</script>
+</body>
+</html>
